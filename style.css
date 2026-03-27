@@ -1,52 +1,51 @@
 /*
-  MyJob77 — Feuille de style accessible
-  ──────────────────────────────────────
+  MyBestJob — Feuille de style accessible
+  ────────────────────────────────────────
   Trois publics cibles :
-  ① Asperger   → structure claire, aucune ambiguïté, calme visuel
-  ② Daltoniens → palette bleu/orange (sûre pour protanopie, deutéranopie, tritanopie)
-                  chaque état est codé couleur + forme + texte (triple codage)
-  ③ Dyslexiques → police Lexend, taille 18 px, interligne 1.7, pas de justification,
-                   lignes courtes (max 65 ch), espacement généreux
+  ① Asperger   → couleurs douces non saturées, calme visuel, structure claire
+  ② Daltoniens → palette marine/ambre (sûre pour toutes formes de daltonisme)
+                  chaque état codé couleur + forme + texte (triple codage)
+  ③ Dyslexiques → police Lexend, fond crème #FAF7F2, interligne 1.7, pas de justification
 */
 
 /* ── Variables ────────────────────────────────────────────────────────────── */
 :root {
-  /* Bleu principal (daltonien-safe) */
-  --bleu:       #1A56DB;
-  --bleu-sombre:#1239A6;
-  --bleu-clair: #E1EFFE;
+  /* Marine principal — calme, non saturé, daltonien-safe */
+  --bleu:       #1E3A5F;
+  --bleu-sombre:#132540;
+  --bleu-clair: #E8EFF7;
 
-  /* Orange accent (contraste sûr sur bleu, visible daltoniens) */
-  --orange:     #C2570A;
+  /* Ambre accent — paire universelle avec le marine */
+  --orange:     #D97706;
   --orange-clair:#FEF3C7;
 
-  /* Niveaux de compatibilité — couleur + forme différentes */
-  /* ③★★★ Très compatible  → bleu     + forme ■ */
-  --c-haut-bg:  #E1EFFE;
-  --c-haut-fg:  #1A3A8F;
-  --c-haut-brd: #1A56DB;
+  /* Niveaux de compatibilité — triple codage */
+  /* ■■■ Très compatible  → marine clair */
+  --c-haut-bg:  #E8EFF7;
+  --c-haut-fg:  #1E3A5F;
+  --c-haut-brd: #1E3A5F;
 
-  /* ②★★  Compatible       → teal     + forme ▲ */
-  --c-mid-bg:   #D1FAE5;
-  --c-mid-fg:   #065F46;
-  --c-mid-brd:  #059669;
+  /* ▲▲▲ Compatible       → ardoise bleuté */
+  --c-mid-bg:   #EEF2FF;
+  --c-mid-fg:   #3730A3;
+  --c-mid-brd:  #4F46E5;
 
-  /* ①★   Neutre           → ambre    + forme ● */
+  /* ●●● Neutre           → ambre doux */
   --c-low-bg:   #FEF3C7;
   --c-low-fg:   #92400E;
   --c-low-brd:  #D97706;
 
-  /* ✗    Peu compatible   → gris-brun + forme ✕ */
-  --c-non-bg:   #F3F4F6;
-  --c-non-fg:   #4B5563;
-  --c-non-brd:  #9CA3AF;
+  /* ✕✕✕ Peu compatible   → gris neutre */
+  --c-non-bg:   #F1F5F9;
+  --c-non-fg:   #475569;
+  --c-non-brd:  #94A3B8;
 
-  /* Typo / structure */
-  --texte:      #111827;
-  --texte-sec:  #4B5563;
-  --fond:       #F9FAFB;
-  --carte-fond: #FFFFFF;
-  --bordure:    #E5E7EB;
+  /* Typo / structure — fond crème pour dyslexie */
+  --texte:      #1C2B3A;
+  --texte-sec:  #4A5568;
+  --fond:       #FAF7F2;
+  --carte-fond: #FFFDF9;
+  --bordure:    #E2D9CC;
   --radius:     10px;
   --ombre:      0 1px 4px rgba(0,0,0,.10), 0 2px 12px rgba(0,0,0,.06);
 }
