@@ -60,23 +60,15 @@ async function getFTToken() {
   return data.access_token;
 }
 
-async function fetchFranceTravail() {
-  const token = await getFTToken();
-  const params = new URLSearchParams({
-    commune:  PROVINS_INSEE,
-    distance: RAYON_KM,
-    range:    '0-149',
-    sort:     '1',
-  });
+async function fetchFTAvecParams(token, params, source) {
   const res = await fetch(
     `https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search?${params}`,
     { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }
   );
   if (!res.ok) throw new Error(`FT API ${res.status}`);
   const data = await res.json();
-
   return (data.resultats || []).map(item => ({
-    source:  'France Travail',
+    source,
     titre:   item.intitule || '',
     lieu:    item.lieuTravail?.libelle || '',
     contrat: item.typeContratLibelle || '',
@@ -84,8 +76,42 @@ async function fetchFranceTravail() {
     url:     item.origineOffre?.urlOrigine ||
              `https://candidat.francetravail.fr/offres/recherche/detail/${item.id}`,
     score:   scoreAsperger(`${item.intitule} ${item.description || ''}`),
+    id:      item.id,
   }));
 }
+
+async function fetchFranceTravail() {
+  const token = await getFTToken();
+
+  // Requête 1 : toutes offres dans le rayon
+  const p1 = new URLSearchParams({
+    commune:  PROVINS_INSEE,
+    distance: RAYON_KM,
+    range:    '0-149',
+    sort:     '1',
+  });
+
+  // Requête 2 : offres spécifiques TH (accessibleTH) — rayon élargi
+  const p2 = new URLSearchParams({
+    commune:      PROVINS_INSEE,
+    distance:     70,
+    range:        '0-99',
+    sort:         '1',
+    accessibleTH: 'true',
+  });
+
+  const [r1, r2] = await Promise.all([
+    fetchFTAvecParams(token, p1, 'France Travail'),
+    fetchFTAvecParams(token, p2, 'France Travail — Offres TH'),
+  ]);
+
+  // Dédoublonnage par id
+  const vus = new Set(r1.map(o => o.id));
+  const r2unique = r2.filter(o => !vus.has(o.id));
+
+  return [...r1, ...r2unique];
+}
+
 
 // ── Softy.pro scraping ────────────────────────────────────────────────────────
 
