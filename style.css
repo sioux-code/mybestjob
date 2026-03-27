@@ -301,7 +301,7 @@ select:focus { outline: 3px solid var(--bleu); }
   border: 1px solid transparent;
 }
 
-.badge-haut { background: var(--c-haut-bg); color: var(--c-haut-fg); border-color: var(--c-haut-brd); }
+.badge-haut { background: var(--bleu);       color: #fff;             border-color: var(--bleu);       font-weight: 700; }
 .badge-mid  { background: var(--c-mid-bg);  color: var(--c-mid-fg);  border-color: var(--c-mid-brd);  }
 .badge-low  { background: var(--c-low-bg);  color: var(--c-low-fg);  border-color: var(--c-low-brd);  }
 .badge-non  { background: var(--c-non-bg);  color: var(--c-non-fg);  border-color: var(--c-non-brd);  }
