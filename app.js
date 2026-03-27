@@ -149,7 +149,12 @@ async function chargerOffres(forceRefresh = false) {
   }
 
   try {
-    const res = await fetch('/api/offres');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000); // 15s max
+
+    const res = await fetch('/api/offres', { signal: controller.signal });
+    clearTimeout(timeout);
+
     if (!res.ok) throw new Error(`Erreur serveur ${res.status}`);
     const data = await res.json();
 
@@ -165,19 +170,20 @@ async function chargerOffres(forceRefresh = false) {
       errDiv.textContent = 'Avertissement : ' + data.errors.join(' — ');
     }
   } catch (err) {
-    // Repli sur le cache si réseau indisponible
     const cached = sessionStorage.getItem(CLE_CACHE);
     if (cached) {
-      toutesOffres = JSON.parse(cached);
+      try { toutesOffres = JSON.parse(cached); } catch {}
       majEl.textContent = '(données en cache)';
     } else {
       errDiv.hidden = false;
-      errDiv.textContent = 'Impossible de charger les offres. Vérifiez votre connexion.';
+      errDiv.textContent = err.name === 'AbortError'
+        ? 'Délai dépassé — réessayez dans un instant.'
+        : 'Impossible de charger les offres : ' + err.message;
     }
+  } finally {
+    loading.hidden = true;
+    afficher();
   }
-
-  loading.hidden = true;
-  afficher();
 }
 
 // ── Lancement ──────────────────────────────────────────────────────────────────
