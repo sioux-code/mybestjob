@@ -5,7 +5,7 @@ const CLE_CACHE   = 'mybestjob-offres-v1';
 const CLE_DATE    = 'mybestjob-date';
 
 let toutesOffres  = [];
-let scoreMin      = 0;
+let scoreMin      = 8;
 let filtreContrat = '';
 let deferredInstall = null;
 
