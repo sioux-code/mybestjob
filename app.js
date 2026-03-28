@@ -197,10 +197,10 @@ function niveauScore(score) {
 }
 
 function badgeScore(score) {
-  if (score >= 8) return { cls: 'badge-haut', texte: '\u25A0\u25A0\u25A0 Tr\u00e8s compatible' };
-  if (score >= 6) return { cls: 'badge-mid',  texte: '\u25B2\u25B2\u25B3 Compatible'       };
-  if (score >= 4) return { cls: 'badge-low',  texte: '\u25CF\u25CB\u25CB Neutre'            };
-  return            { cls: 'badge-non',  texte: '\u2715\u2715\u2715 Peu compatible'   };
+  if (score >= 8) return { cls: 'badge-haut', texte: 'Très compatible' };
+  if (score >= 6) return { cls: 'badge-mid',  texte: 'Compatible'      };
+  if (score >= 4) return { cls: 'badge-low',  texte: 'Neutre'          };
+  return            { cls: 'badge-non',  texte: 'Peu compatible'  };
 }
 
 // ── Echappement HTML ───────────────────────────────────────────────────────────
