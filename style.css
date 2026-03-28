@@ -332,7 +332,6 @@ select:focus { outline: 3px solid var(--bleu); }
 }
 
 /* ── États ───────────────────────────────────────────────────────────────── */
-.etat-chargement,
 .etat-vide {
   display: flex;
   flex-direction: column;
@@ -342,17 +341,6 @@ select:focus { outline: 3px solid var(--bleu); }
   color: var(--texte-sec);
   font-size: .9rem;
 }
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--bordure);
-  border-top-color: var(--bleu);
-  border-radius: 50%;
-  animation: spin .8s linear infinite;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
 
 .etat-erreur {
   margin: .5rem 1rem;

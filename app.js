@@ -124,11 +124,9 @@ function afficher() {
 
 // ── Chargement des offres ──────────────────────────────────────────────────────
 async function chargerOffres(forceRefresh = false) {
-  const loading = document.getElementById('chargement');
   const errDiv  = document.getElementById('erreurs');
   const majEl   = document.getElementById('derniere-maj');
 
-  loading.hidden = false;
   errDiv.hidden  = true;
   document.getElementById('liste-offres').innerHTML = '';
   document.getElementById('vide').hidden = true;
@@ -140,7 +138,6 @@ async function chargerOffres(forceRefresh = false) {
       const cachedDate = sessionStorage.getItem(CLE_DATE);
       if (cached && cachedDate && Date.now() - Number(cachedDate) < 5 * 60_000) {
         toutesOffres = JSON.parse(cached);
-        loading.hidden = true;
         majEl.textContent = `Actualisé il y a moins de 5 min`;
         afficher();
         return;
@@ -181,7 +178,6 @@ async function chargerOffres(forceRefresh = false) {
         : 'Impossible de charger les offres : ' + err.message;
     }
   } finally {
-    loading.hidden = true;
     afficher();
   }
 }
