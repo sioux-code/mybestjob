@@ -6,7 +6,7 @@ const CLE_DATE    = 'mybestjob-date';
 const CLE_PROFIL  = 'mybestjob-profil';
 
 let toutesOffres   = [];
-let scoreMin       = 8;
+let scoreMin       = 6;
 let filtreContrat  = '';
 let filtreSource   = '';
 let filtreTH       = false;
@@ -182,10 +182,10 @@ document.getElementById('btn-actualiser').addEventListener('click', () => charge
 
 // ── Réinitialiser filtres ─────────────────────────────────────────────────────
 document.getElementById('btn-reset-filtres').addEventListener('click', () => {
-  // Compatibilité → Très compatible (score 8)
-  scoreMin = 8;
+  // Compatibilité → Compatible (score 6)
+  scoreMin = 6;
   document.querySelectorAll('[data-filter="score"]').forEach(b => {
-    const actif = b.dataset.score === '8';
+    const actif = b.dataset.score === '6';
     b.classList.toggle('active', actif);
     b.setAttribute('aria-checked', String(actif));
   });
@@ -302,17 +302,23 @@ function afficher() {
   const vide     = document.getElementById('vide');
   const compteur = document.getElementById('compteur');
 
-  let filtrées = toutesOffres.filter(o => o.score >= scoreMin);
-  if (filtreContrat) filtrées = filtrées.filter(o => o.contrat === filtreContrat);
-  if (filtreSource)  filtrées = filtrées.filter(o => o.source === filtreSource);
-  if (filtreTH)      filtrées = filtrées.filter(o => o.th === true);
-  if (filtreProfil)  filtrées = filtrées.filter(o => scoreProfilPerso(o) >= 7);
+  // Score perso calculé une seule fois par offre
+  const avecScore = toutesOffres.map(o => ({ o, sp: scoreProfilPerso(o) }));
+
+  let filtrées = avecScore.filter(({ sp }) => sp >= scoreMin);
+  if (filtreContrat) filtrées = filtrées.filter(({ o }) => o.contrat === filtreContrat);
+  if (filtreSource)  filtrées = filtrées.filter(({ o }) => o.source  === filtreSource);
+  if (filtreTH)      filtrées = filtrées.filter(({ o }) => o.th === true);
+  if (filtreProfil)  filtrées = filtrées.filter(({ sp }) => sp >= 7);
   if (userLat !== null) {
-    filtrées = filtrées.filter(o => {
+    filtrées = filtrées.filter(({ o }) => {
       if (o.lat == null || o.lng == null) return true;
       return haversineKm(userLat, userLng, o.lat, o.lng) <= filtreDistance;
     });
   }
+
+  // Trier par score perso décroissant
+  filtrées.sort((a, b) => b.sp - a.sp);
 
   const nb = filtrées.length;
   compteur.textContent = `${nb} offre${nb > 1 ? 's' : ''} affich\u00e9e${nb > 1 ? 's' : ''}`;
@@ -320,16 +326,15 @@ function afficher() {
   if (nb === 0) { liste.innerHTML = ''; vide.hidden = false; return; }
   vide.hidden = true;
 
-  liste.innerHTML = filtrées.map(o => {
-    const { cls, texte } = badgeScore(o.score);
-    const niveau  = niveauScore(o.score);
-    const profil  = scoreProfilPerso(o);
+  liste.innerHTML = filtrées.map(({ o, sp }) => {
+    const { cls, texte } = badgeScore(sp);
+    const niveau  = niveauScore(sp);
     const dist    = (userLat !== null && o.lat != null && o.lng != null)
                     ? Math.round(haversineKm(userLat, userLng, o.lat, o.lng)) : null;
 
-    const metaProfil  = profil >= 7
+    const metaProfil  = sp >= 7
       ? `<span class="meta-tag meta-tag--profil">\u2665 Pour moi</span>`
-      : profil <= 3
+      : sp <= 3
       ? `<span class="meta-tag meta-tag--hors-profil">\u26A0 Hors profil</span>`
       : '';
     const metaDist    = dist !== null ? `<span class="meta-tag meta-tag--dist">\uD83D\uDCCD ${dist}\u00a0km</span>` : '';
