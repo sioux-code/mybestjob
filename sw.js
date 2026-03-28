@@ -1,5 +1,7 @@
-const CACHE_NOM = 'mybestjob-v4';
-const STATIQUES = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+const CACHE_NOM = 'mybestjob-v5';
+
+// Uniquement les assets statiques immuables (jamais le HTML)
+const STATIQUES = ['/style.css', '/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NOM).then(c => c.addAll(STATIQUES)));
@@ -18,6 +20,14 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
+  // HTML → toujours réseau (jamais de cache pour éviter spinner stale)
+  if (url.pathname === '/' || url.pathname.endsWith('.html')) {
+    e.respondWith(
+      fetch(e.request).catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+
   // API → réseau d'abord, réponse vide en hors-ligne
   if (url.pathname.startsWith('/api/')) {
     e.respondWith(
@@ -30,7 +40,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Statiques → cache d'abord
+  // Assets statiques (CSS, JS, images) → cache d'abord
   e.respondWith(
     caches.match(e.request).then(cached =>
       cached ||
