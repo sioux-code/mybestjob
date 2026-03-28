@@ -409,39 +409,6 @@ h1 strong {
   font-weight: 600;
 }
 
-/* Pills compatibilité — copie exacte des badges des cartes */
-[data-filter="score"] {
-  border-radius: 6px;
-  font-size: .75rem;
-  font-weight: 600;
-  padding: .18rem .55rem;
-  border-width: 1px;
-}
-
-[data-filter="score"][data-score="0"],
-[data-filter="score"][data-score="0"]:hover,
-[data-filter="score"][data-score="0"].active {
-  background: var(--c-non-bg); border-color: var(--c-non-brd); color: var(--c-non-fg);
-}
-
-[data-filter="score"][data-score="6"],
-[data-filter="score"][data-score="6"]:hover,
-[data-filter="score"][data-score="6"].active {
-  background: var(--c-mid-bg); border-color: var(--c-mid-brd); color: var(--c-mid-fg);
-}
-
-[data-filter="score"][data-score="8"],
-[data-filter="score"][data-score="8"]:hover,
-[data-filter="score"][data-score="8"].active {
-  background: var(--bleu); border-color: var(--bleu); color: #fff;
-}
-
-/* Indiquer le bouton actif par une ombre */
-[data-filter="score"].active {
-  box-shadow: 0 0 0 3px rgba(0,0,0,.15);
-  font-weight: 700;
-}
-
 
 /* Sélects */
 select {

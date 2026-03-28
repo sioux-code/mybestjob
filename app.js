@@ -6,7 +6,6 @@ const CLE_DATE    = 'mybestjob-date';
 const CLE_PROFIL  = 'mybestjob-profil';
 
 let toutesOffres   = [];
-let scoreMin       = 6;
 let filtreContrat  = '';
 let filtreSource   = '';
 let filtreTH       = false;
@@ -116,18 +115,6 @@ document.getElementById('install-btn').addEventListener('click', async () => {
   deferredInstall = null;
 });
 
-// ── Filtres — compatibilité ────────────────────────────────────────────────────
-document.querySelectorAll('[data-filter="score"]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-filter="score"]').forEach(b => {
-      b.classList.remove('active'); b.setAttribute('aria-checked', 'false');
-    });
-    btn.classList.add('active'); btn.setAttribute('aria-checked', 'true');
-    scoreMin = parseInt(btn.dataset.score, 10);
-    afficher();
-  });
-});
-
 document.getElementById('filtre-contrat').addEventListener('change', e => { filtreContrat = e.target.value; afficher(); });
 document.getElementById('filtre-source').addEventListener('change',  e => { filtreSource  = e.target.value; afficher(); });
 
@@ -182,14 +169,6 @@ document.getElementById('btn-actualiser').addEventListener('click', () => charge
 
 // ── Réinitialiser filtres ─────────────────────────────────────────────────────
 document.getElementById('btn-reset-filtres').addEventListener('click', () => {
-  // Compatibilité → Compatible (score 6)
-  scoreMin = 6;
-  document.querySelectorAll('[data-filter="score"]').forEach(b => {
-    const actif = b.dataset.score === '6';
-    b.classList.toggle('active', actif);
-    b.setAttribute('aria-checked', String(actif));
-  });
-
   // Contrat / Source → Tous
   filtreContrat = '';
   filtreSource  = '';
@@ -305,7 +284,7 @@ function afficher() {
   // Score perso calculé une seule fois par offre
   const avecScore = toutesOffres.map(o => ({ o, sp: scoreProfilPerso(o) }));
 
-  let filtrées = avecScore.filter(({ sp }) => sp >= scoreMin);
+  let filtrées = avecScore.slice();
   if (filtreContrat) filtrées = filtrées.filter(({ o }) => o.contrat === filtreContrat);
   if (filtreSource)  filtrées = filtrées.filter(({ o }) => o.source  === filtreSource);
   if (filtreTH)      filtrées = filtrées.filter(({ o }) => o.th === true);
