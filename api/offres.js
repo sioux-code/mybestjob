@@ -71,6 +71,8 @@ async function fetchFTAvecParams(token, params, isTHQuery = false) {
     source:  'France Travail',
     titre:   item.intitule || '',
     lieu:    item.lieuTravail?.libelle || '',
+    lat:     item.lieuTravail?.latitude  ?? null,
+    lng:     item.lieuTravail?.longitude ?? null,
     contrat: item.typeContratLibelle || '',
     date:    item.dateCreation?.slice(0, 10) || '',
     url:     item.origineOffre?.urlOrigine ||
@@ -146,6 +148,8 @@ async function fetchSofty({ nom, url }) {
       source:  nom,
       titre:   texte.slice(0, 120),
       lieu:    'Provins',
+      lat:     48.5599,
+      lng:     3.2994,
       contrat: CONTRATS.find(c => texte.includes(c)) || '',
       date:    dateM ? dateM[1] : '',
       th:      false,

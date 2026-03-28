@@ -1,4 +1,7 @@
 {
+  "functions": {
+    "api/offres.js": { "memory": 256, "maxDuration": 20 }
+  },
   "headers": [
     {
       "source": "/sw.js",

@@ -9,6 +9,9 @@ let scoreMin      = 8;
 let filtreContrat = '';
 let filtreSource  = '';
 let filtreTH      = false;
+let userLat       = null;
+let userLng       = null;
+let filtreDistance = 50; // km
 let deferredInstall = null;
 
 // ── Suppression service worker (source de problèmes de cache) ─────────────────
@@ -63,6 +66,52 @@ document.getElementById('filtre-source').addEventListener('change', e => {
 document.getElementById('filtre-th').addEventListener('change', e => {
   filtreTH = e.target.checked;
   e.target.setAttribute('aria-checked', String(e.target.checked));
+  afficher();
+});
+
+// ── Géolocalisation ───────────────────────────────────────────────────────────
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+document.getElementById('btn-geo').addEventListener('click', () => {
+  const btn   = document.getElementById('btn-geo');
+  const label = document.getElementById('geo-label');
+
+  if (!navigator.geolocation) {
+    label.textContent = 'Non supporté';
+    return;
+  }
+
+  label.textContent = 'Localisation…';
+  btn.disabled = true;
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      userLat = pos.coords.latitude;
+      userLng = pos.coords.longitude;
+      label.textContent = 'Position détectée';
+      btn.disabled = false;
+      btn.classList.add('btn-geo--active');
+      document.getElementById('geo-slider-wrap').hidden = false;
+      afficher();
+    },
+    () => {
+      label.textContent = 'Accès refusé';
+      btn.disabled = false;
+    }
+  );
+});
+
+document.getElementById('filtre-distance').addEventListener('input', e => {
+  filtreDistance = parseInt(e.target.value, 10);
+  document.getElementById('distance-val').textContent = `${filtreDistance} km`;
+  e.target.setAttribute('aria-valuetext', `${filtreDistance} km`);
   afficher();
 });
 
@@ -123,6 +172,12 @@ function afficher() {
   if (filtreContrat) filtrées = filtrées.filter(o => o.contrat.toLowerCase().includes(filtreContrat.toLowerCase()));
   if (filtreSource)  filtrées = filtrées.filter(o => o.source === filtreSource);
   if (filtreTH)      filtrées = filtrées.filter(o => o.th === true);
+  if (userLat !== null) {
+    filtrées = filtrées.filter(o => {
+      if (o.lat == null || o.lng == null) return true; // garde si pas de coords
+      return haversineKm(userLat, userLng, o.lat, o.lng) <= filtreDistance;
+    });
+  }
 
   const nb = filtrées.length;
   compteur.textContent = `${nb} offre${nb > 1 ? 's' : ''} affich\u00e9e${nb > 1 ? 's' : ''}`;
@@ -141,6 +196,10 @@ function afficher() {
     const metaContrat = o.contrat ? `<span class="meta-tag">Contrat\u00a0: ${esc(o.contrat)}</span>` : '';
     const metaDate    = o.date    ? `<span class="meta-tag">Date\u00a0: ${esc(o.date)}</span>`       : '';
     const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th" title="Poste accessible aux travailleurs handicap\u00e9s">\u267F TH</span>` : '';
+    const dist = (userLat !== null && o.lat != null && o.lng != null)
+      ? Math.round(haversineKm(userLat, userLng, o.lat, o.lng))
+      : null;
+    const metaDist = dist !== null ? `<span class="meta-tag meta-tag--dist">\uD83D\uDCCD ${dist}\u00a0km</span>` : '';
     return `
       <li role="listitem">
         <a class="carte" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer"
@@ -150,7 +209,7 @@ function afficher() {
             <span class="carte-titre">${esc(o.titre)}</span>
             <span class="badge ${cls}" aria-hidden="true">${texte}</span>
           </div>
-          <div class="carte-meta">${metaLieu}${metaContrat}${metaDate}${metaTH}</div>
+          <div class="carte-meta">${metaDist}${metaLieu}${metaContrat}${metaDate}${metaTH}</div>
           <div class="carte-source">${esc(o.source)}</div>
         </a>
       </li>`;

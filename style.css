@@ -416,6 +416,60 @@ select:focus { outline: 3px solid var(--bleu); }
   padding: .08rem .45rem;
 }
 
+/* ── Filtre géolocalisation ──────────────────────────────────────────────── */
+.geo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+
+.btn-geo {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  background: var(--fond);
+  border: 2px solid var(--bordure);
+  border-radius: 20px;
+  padding: .28rem .8rem;
+  font-family: inherit;
+  font-size: .82rem;
+  cursor: pointer;
+  color: var(--texte);
+  transition: border-color .12s, background .12s;
+  white-space: nowrap;
+}
+
+.btn-geo svg { width: 14px; height: 14px; flex-shrink: 0; }
+.btn-geo:hover { border-color: var(--bleu); color: var(--bleu); }
+.btn-geo--active { background: var(--bleu-clair); border-color: var(--bleu); color: var(--bleu); font-weight: 600; }
+
+.geo-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+#filtre-distance {
+  width: 110px;
+  accent-color: var(--bleu);
+  cursor: pointer;
+}
+
+#distance-val {
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--bleu);
+  min-width: 3rem;
+}
+
+.meta-tag--dist {
+  background: var(--bleu-clair);
+  border-color: var(--bleu);
+  color: var(--bleu);
+  font-weight: 600;
+}
+
 .meta-tag--th {
   background: var(--c-mid-bg);
   border-color: var(--c-mid-brd);

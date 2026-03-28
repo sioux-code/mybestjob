@@ -89,6 +89,21 @@
       </label>
     </div>
 
+    <div class="filter-group filter-group--geo">
+      <span class="filter-label" id="label-geo">Distance depuis moi</span>
+      <div class="geo-controls">
+        <button class="btn-geo" id="btn-geo" aria-label="Détecter ma position">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7" stroke-dasharray="2 2"/></svg>
+          <span id="geo-label">Me localiser</span>
+        </button>
+        <div class="geo-slider-wrap" id="geo-slider-wrap" hidden>
+          <input type="range" id="filtre-distance" min="5" max="100" step="5" value="50"
+                 aria-labelledby="label-geo" aria-valuetext="50 km">
+          <span id="distance-val">50 km</span>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <!-- ── Barre d'info ── -->
