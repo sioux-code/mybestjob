@@ -79,6 +79,7 @@
 html {
   font-size: 18px;
   scroll-behavior: smooth;
+  background: var(--fond);
 }
 
 body {
@@ -116,7 +117,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 20;
-  box-shadow: 0 1px 6px rgba(0,0,0,.07);
+  box-shadow: 0 1px 6px rgba(0,0,0,.20);
 }
 
 /* Barre de couleur décorative en haut du header */
@@ -520,7 +521,7 @@ select:focus { outline: 3px solid var(--bleu); }
 /* ── Liste de cartes ─────────────────────────────────────────────────────── */
 #liste-offres {
   list-style: none;
-  padding: .25rem 1rem .5rem;
+  padding: .25rem 1.25rem .5rem;
   display: flex;
   flex-direction: column;
   gap: .7rem;
