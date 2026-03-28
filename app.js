@@ -336,7 +336,7 @@ function afficher() {
     const metaLieu    = o.lieu    ? `<span class="meta-tag">${esc(o.lieu)}</span>` : '';
     const metaContrat = o.contrat ? `<span class="meta-tag">${esc(o.contrat)}</span>` : '';
     const metaDate    = o.date    ? `<span class="meta-tag">${esc(o.date)}</span>` : '';
-    const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th">\u267F TH</span>` : '';
+    const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th" title="Cet employeur a déclaré être ouvert aux travailleurs handicapés">Ouvert RQTH</span>` : '';
 
     return `
       <li role="listitem">
