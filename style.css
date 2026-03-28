@@ -737,32 +737,64 @@ select:focus { outline: 3px solid var(--bleu); }
    PROFILS D'ACCESSIBILITÉ — classe sur <html>
    ════════════════════════════════════════════════════════════════════════════ */
 
-/* ── Autisme · Asperger ──────────────────────────────────────────────────── */
+/* ── Autisme · Asperger : dark pastel, zéro animation, structure nette ──── */
 html.profil-autisme * { transition: none !important; animation: none !important; }
 
-html.profil-autisme body { background: #F5F4F0; }
+html.profil-autisme body  { background: #252830; color: #D0CCC8; }
+
+html.profil-autisme header { background: #1E2128; border-bottom-color: #383C48; box-shadow: none; }
+html.profil-autisme header::before { background: linear-gradient(90deg, #3A5070, #604878, #306050); }
+html.profil-autisme h1        { color: #D0CCC8; }
+html.profil-autisme h1 strong { color: #90B0CC; }
+html.profil-autisme .subtitle { color: #80849A; }
+html.profil-autisme .btn-profil-header { background: #383C48; border-color: #506080; color: #90B0CC; }
+
+html.profil-autisme .profiles-bar { background: #1E2128; border-color: #383C48; }
+html.profil-autisme .filters      { background: #222530; border-color: #383C48; }
+html.profil-autisme .filter-label { color: #80849A; }
+html.profil-autisme .filter-group { border-left: 3px solid #383C48; padding-left: .6rem; }
+html.profil-autisme .toggle-label-text { color: #C0BDB8; }
+html.profil-autisme .info-bar     { color: #80849A; }
+
+html.profil-autisme .pill         { background: #252830; border-color: #383C48; color: #C0BDB8; }
+html.profil-autisme .pill:hover   { border-color: #506080; color: #90B0CC; }
+html.profil-autisme .pill.active  { background: #3A5070; border-color: #506080; color: #C0D8E8; }
+html.profil-autisme select        { background: #1E2128; border-color: #383C48; color: #C0BDB8; }
 
 html.profil-autisme #liste-offres { gap: 1.1rem; }
 
 html.profil-autisme .carte {
+  background: #2E3138;
   border-left-width: 7px;
   border-radius: 4px;
   box-shadow: none;
-  border-bottom: 2px solid var(--bordure);
+  border-bottom: 2px solid #383C48;
 }
-
 html.profil-autisme .carte:hover,
-html.profil-autisme .carte:focus-visible {
-  transform: none;
-  box-shadow: 0 0 0 3px var(--bleu);
-}
+html.profil-autisme .carte:focus-visible { transform: none; box-shadow: 0 0 0 3px #506080; }
+html.profil-autisme .carte-titre  { color: #D0CCC8; }
+html.profil-autisme .carte-source { color: #606470; opacity: 1; }
+html.profil-autisme .carte-meta   { gap: .6rem; }
 
-html.profil-autisme .carte-meta { gap: .6rem; }
+html.profil-autisme .meta-tag     { background: #383C48; border-color: #484C58; color: #A8A8B8; }
+html.profil-autisme .meta-tag--profil      { background: #2A4038; border-color: #3A5A48; color: #90C0A8; }
+html.profil-autisme .meta-tag--hors-profil { background: #402830; border-color: #604048; color: #C09098; }
+html.profil-autisme .meta-tag--dist        { background: #283848; border-color: #385878; color: #80A8C8; }
+html.profil-autisme .meta-tag--th          { background: #283050; border-color: #384870; color: #8090C8; }
 
-html.profil-autisme .filter-group {
-  border-left: 3px solid var(--bordure);
-  padding-left: .6rem;
-}
+/* Niveaux distincts : vert / lavande / ocre / rose */
+html.profil-autisme .badge-haut { background: #284838; color: #90C8A8; border-color: #386848; }
+html.profil-autisme .badge-mid  { background: #302860; color: #A898D8; border-color: #484880; }
+html.profil-autisme .badge-low  { background: #483818; color: #C8A860; border-color: #685020; }
+html.profil-autisme .badge-non  { background: #382028; color: #C08090; border-color: #584050; }
+
+html.profil-autisme .carte[data-niveau="haut"]  { border-left-color: #386848; }
+html.profil-autisme .carte[data-niveau="mid"]   { border-left-color: #484880; }
+html.profil-autisme .carte[data-niveau="low"]   { border-left-color: #685020; }
+html.profil-autisme .carte[data-niveau="non"]   { border-left-color: #584050; }
+
+html.profil-autisme .fab { background: #3A5070; }
+html.profil-autisme .fab:hover { background: #486080; }
 
 /* ── TDAH : info essentielle en avant, secondaire estompée ───────────────── */
 html.profil-tdah .carte { border-left-width: 6px; }
@@ -900,15 +932,16 @@ html.profil-anxiete .meta-tag--hors-profil { display: none; }
 html.profil-anxiete .meta-tag--dist        { background: #2E3A4A; border-color: #4A5E78; color: #90AABF; }
 html.profil-anxiete .meta-tag--th          { background: #2E3A4E; border-color: #4A5A7A; color: #9AAAC8; }
 
-html.profil-anxiete .badge-haut { background: #3D4A60; color: #C8D8EA; border-color: #4A5E7A; }
-html.profil-anxiete .badge-mid  { background: #3D4055; color: #BEB8D0; border-color: #4A4A6A; }
-html.profil-anxiete .badge-low  { background: #3D3A4A; color: #B0AABB; border-color: #4A4858; }
-html.profil-anxiete .badge-non  { background: #333540; color: #8A8A9A; border-color: #404250; }
+/* Niveaux bien distincts : vert sauge / lavande / ocre doux / rose estompé */
+html.profil-anxiete .badge-haut { background: #2E4A3E; color: #A8D4BC; border-color: #3E6A54; }
+html.profil-anxiete .badge-mid  { background: #3A3660; color: #B8B4E0; border-color: #5050A0; }
+html.profil-anxiete .badge-low  { background: #4A3E28; color: #D4C08A; border-color: #7A6030; }
+html.profil-anxiete .badge-non  { background: #3A2A30; color: #B89098; border-color: #604050; }
 
-html.profil-anxiete .carte[data-niveau="haut"]  { border-left-color: #5B6B8A; }
-html.profil-anxiete .carte[data-niveau="mid"]   { border-left-color: #7A6B8A; }
-html.profil-anxiete .carte[data-niveau="low"]   { border-left-color: #6A6A7A; }
-html.profil-anxiete .carte[data-niveau="non"]   { border-left-color: #4A4A5A; }
+html.profil-anxiete .carte[data-niveau="haut"]  { border-left-color: #3E6A54; }
+html.profil-anxiete .carte[data-niveau="mid"]   { border-left-color: #5050A0; }
+html.profil-anxiete .carte[data-niveau="low"]   { border-left-color: #7A6030; }
+html.profil-anxiete .carte[data-niveau="non"]   { border-left-color: #604050; }
 
 html.profil-anxiete .etat-erreur { display: none; }
 html.profil-anxiete .fab         { background: #3D4A60; }
