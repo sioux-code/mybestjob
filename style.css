@@ -8,6 +8,20 @@
   ③ Dyslexiques → police Lexend, fond crème #FAF7F2, interligne 1.7, pas de justification
 */
 
+/* ── Police OpenDyslexic (chargée à la demande par JS) ───────────────────── */
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/fonts/OpenDyslexic-Bold.otf') format('opentype');
+  font-weight: 600 700;
+  font-display: swap;
+}
+
 /* ── Variables ────────────────────────────────────────────────────────────── */
 :root {
   /* Marine principal */
@@ -345,12 +359,21 @@ h1 strong {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: .75rem;
+  gap: .6rem;
 }
 
-.profiles-bar .filter-label {
-  white-space: nowrap;
+.profiles-bar__label { white-space: nowrap; }
+
+.profiles-pill-group { flex-wrap: wrap; }
+
+.profile-ctrl {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding-left: .75rem;
+  border-left: 2px solid var(--bordure);
 }
+.profile-ctrl[hidden] { display: none !important; }
 
 /* ── Filtres ─────────────────────────────────────────────────────────────── */
 .filters {
@@ -711,19 +734,21 @@ select:focus { outline: 3px solid var(--bleu); }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   PROFILS D'ACCESSIBILITÉ
-   Classe appliquée sur <html> par app.js
+   PROFILS D'ACCESSIBILITÉ — classe sur <html>
    ════════════════════════════════════════════════════════════════════════════ */
 
-/* ── Autisme · Asperger : zéro animation, structure renforcée ────────────── */
-html.profil-autisme * {
-  transition: none !important;
-  animation: none !important;
-}
+/* ── Autisme · Asperger ──────────────────────────────────────────────────── */
+html.profil-autisme * { transition: none !important; animation: none !important; }
+
+html.profil-autisme body { background: #F5F4F0; }
+
+html.profil-autisme #liste-offres { gap: 1.1rem; }
 
 html.profil-autisme .carte {
   border-left-width: 7px;
   border-radius: 4px;
+  box-shadow: none;
+  border-bottom: 2px solid var(--bordure);
 }
 
 html.profil-autisme .carte:hover,
@@ -732,36 +757,48 @@ html.profil-autisme .carte:focus-visible {
   box-shadow: 0 0 0 3px var(--bleu);
 }
 
+html.profil-autisme .carte-meta { gap: .6rem; }
+
 html.profil-autisme .filter-group {
   border-left: 3px solid var(--bordure);
   padding-left: .6rem;
 }
 
-/* ── Malvoyant : contraste élevé + grande taille ─────────────────────────── */
-html.profil-malvoyant {
-  font-size: 21px;
+/* ── TDAH : info essentielle en avant, secondaire estompée ───────────────── */
+html.profil-tdah .carte { border-left-width: 6px; }
+
+html.profil-tdah .carte-titre {
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
-html.profil-malvoyant body {
-  background: #fff;
-  color: #000;
+html.profil-tdah .badge { font-size: .85rem; padding: .25rem .7rem; }
+
+html.profil-tdah .carte-source { display: none; } /* supprime le bruit */
+
+html.profil-tdah .meta-tag--dist,
+html.profil-tdah .meta-tag--profil { font-size: .85rem; font-weight: 700; }
+
+html.profil-tdah .carte-meta .meta-tag:not(.meta-tag--dist):not(.meta-tag--profil):not(.meta-tag--th) {
+  opacity: .55; /* estompe lieu/contrat/date */
 }
+
+html.profil-tdah #liste-offres { gap: .5rem; }
+
+html.profil-tdah .carte { padding: .7rem 1rem; }
+
+/* ── Malvoyant : contraste maximal + taille pilotée par slider ───────────── */
+html.profil-malvoyant body  { background: #fff; color: #000; }
 
 html.profil-malvoyant header {
   background: #fff;
   border-bottom: 3px solid #000;
   box-shadow: none;
 }
-
-html.profil-malvoyant header::before {
-  height: 6px;
-}
+html.profil-malvoyant header::before { height: 6px; }
 
 html.profil-malvoyant .profiles-bar,
-html.profil-malvoyant .filters {
-  background: #f5f5f5;
-  border-color: #000;
-}
+html.profil-malvoyant .filters { background: #f0f0f0; border-color: #000; }
 
 html.profil-malvoyant .carte {
   background: #fff;
@@ -770,58 +807,36 @@ html.profil-malvoyant .carte {
   box-shadow: none;
   border-radius: 4px;
 }
-
 html.profil-malvoyant .carte:hover,
-html.profil-malvoyant .carte:focus-visible {
-  transform: none;
-  box-shadow: 0 0 0 4px #000;
-}
+html.profil-malvoyant .carte:focus-visible { transform: none; box-shadow: 0 0 0 4px #000; }
 
-html.profil-malvoyant .carte-titre {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #000;
-}
+html.profil-malvoyant .carte-titre { font-weight: 700; color: #000; }
 
 html.profil-malvoyant .badge-haut { background: #00008B; color: #fff; border-color: #00008B; }
-html.profil-malvoyant .badge-mid  { background: #006400; color: #fff; border-color: #006400; }
-html.profil-malvoyant .badge-low  { background: #8B4500; color: #fff; border-color: #8B4500; }
+html.profil-malvoyant .badge-mid  { background: #005500; color: #fff; border-color: #005500; }
+html.profil-malvoyant .badge-low  { background: #7A3B00; color: #fff; border-color: #7A3B00; }
 html.profil-malvoyant .badge-non  { background: #333;    color: #fff; border-color: #333;    }
 
-html.profil-malvoyant .meta-tag {
-  background: #eee;
-  border-color: #666;
-  color: #000;
-}
-
+html.profil-malvoyant .meta-tag { background: #eee; border-color: #555; color: #000; }
 html.profil-malvoyant .carte-source { color: #333; opacity: 1; }
-html.profil-malvoyant .info-bar { color: #333; font-size: .85rem; }
+html.profil-malvoyant .info-bar { color: #333; }
 
 html.profil-malvoyant .pill.active { background: #00008B; border-color: #00008B; }
 html.profil-malvoyant .pill:hover  { border-color: #000; color: #000; }
 
 html.profil-malvoyant .fab { background: #000; width: 60px; height: 60px; }
-html.profil-malvoyant .fab:hover { background: #333; }
+html.profil-malvoyant :focus-visible { outline: 4px solid #000; outline-offset: 4px; }
 
-html.profil-malvoyant :focus-visible {
-  outline: 4px solid #000;
-  outline-offset: 4px;
-}
-
-/* ── Dyslexie+ : espacement accru, structure aérée ───────────────────────── */
-html.profil-dyslexie {
+/* ── Dyslexie+ : OpenDyslexic + espacement maximal ───────────────────────── */
+html.profil-dyslexie body {
+  font-family: 'OpenDyslexic', 'Lexend', system-ui, sans-serif;
+  line-height: 2.1;
+  word-spacing: .15em;
+  letter-spacing: .04em;
   font-size: 19px;
 }
 
-html.profil-dyslexie body {
-  line-height: 2.1;
-  word-spacing: .12em;
-  letter-spacing: .03em;
-}
-
-html.profil-dyslexie .carte {
-  padding: 1.1rem 1.3rem;
-}
+html.profil-dyslexie .carte { padding: 1.1rem 1.3rem; }
 
 html.profil-dyslexie .carte-entete {
   flex-direction: column;
@@ -829,17 +844,107 @@ html.profil-dyslexie .carte-entete {
   gap: .4rem;
 }
 
-html.profil-dyslexie .carte-titre {
-  font-size: 1rem;
-  line-height: 1.7;
+html.profil-dyslexie .carte-titre { line-height: 1.7; }
+html.profil-dyslexie .carte-meta  { gap: .5rem; margin-top: .4rem; }
+html.profil-dyslexie .meta-tag    { padding: .15rem .55rem; }
+html.profil-dyslexie #liste-offres { gap: 1rem; }
+html.profil-dyslexie .filters { gap: 1.5rem; }
+
+/* ── Daltonien : palette bleue/orange, zéro rouge/vert ambigu ────────────── */
+html.profil-daltonien .badge-haut { background: #1E3A5F; color: #fff; border-color: #1E3A5F; }
+html.profil-daltonien .badge-mid  { background: #D97706; color: #fff; border-color: #D97706; }
+html.profil-daltonien .badge-low  { background: #64748B; color: #fff; border-color: #64748B; }
+html.profil-daltonien .badge-non  { background: #374151; color: #fff; border-color: #374151; }
+
+html.profil-daltonien .carte[data-niveau="haut"]  { border-left-color: #1E3A5F; }
+html.profil-daltonien .carte[data-niveau="mid"]   { border-left-color: #D97706; }
+html.profil-daltonien .carte[data-niveau="low"]   { border-left-color: #64748B; }
+html.profil-daltonien .carte[data-niveau="non"]   { border-left-color: #374151; }
+
+html.profil-daltonien .meta-tag--profil    { background: #FEF3C7; border-color: #D97706; color: #7C2D12; }
+html.profil-daltonien .meta-tag--hors-profil { background: #E0E7FF; border-color: #3730A3; color: #1e1b4b; }
+
+html.profil-daltonien .pill.active { background: #1E3A5F; border-color: #1E3A5F; }
+html.profil-daltonien .toggle-track { background: #64748B; }
+html.profil-daltonien input:checked ~ .toggle-track { background: #1E3A5F; }
+
+/* ── Anxiété / stress : tons neutres, aucun rouge/orange agressif ─────────── */
+html.profil-anxiete body { background: #F7F5F2; }
+
+html.profil-anxiete .badge-haut { background: #334155; color: #fff; border-color: #334155; }
+html.profil-anxiete .badge-mid  { background: #64748B; color: #fff; border-color: #64748B; }
+html.profil-anxiete .badge-low  { background: #94A3B8; color: #1e293b; border-color: #94A3B8; }
+html.profil-anxiete .badge-non  { background: #E2E8F0; color: #475569; border-color: #CBD5E1; }
+
+/* Supprime les indicateurs rouge "Hors profil" stressants */
+html.profil-anxiete .meta-tag--hors-profil { display: none; }
+html.profil-anxiete .meta-tag--profil { background: #F1F5F9; border-color: #94A3B8; color: #475569; }
+
+html.profil-anxiete .carte { box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+html.profil-anxiete .carte:hover { box-shadow: 0 2px 8px rgba(0,0,0,.10); transform: none; }
+html.profil-anxiete .etat-erreur { display: none; } /* masque les alertes */
+
+html.profil-anxiete .carte[data-niveau="haut"]  { border-left-color: #334155; }
+html.profil-anxiete .carte[data-niveau="mid"]   { border-left-color: #64748B; }
+html.profil-anxiete .carte[data-niveau="low"]   { border-left-color: #94A3B8; }
+html.profil-anxiete .carte[data-niveau="non"]   { border-left-color: #CBD5E1; }
+
+html.profil-anxiete .pill.active { background: #334155; border-color: #334155; }
+html.profil-anxiete header::before { background: linear-gradient(90deg, #334155, #64748B); }
+
+/* ── Motricité réduite : grandes zones de clic, pas de hover fin ─────────── */
+html.profil-motricite .carte {
+  padding: 1.2rem 1.4rem;
+  min-height: 80px;
 }
 
-html.profil-dyslexie .carte-meta { gap: .5rem; margin-top: .4rem; }
-html.profil-dyslexie .meta-tag { padding: .15rem .55rem; }
+html.profil-motricite .carte:hover,
+html.profil-motricite .carte:focus-visible {
+  transform: none;
+  box-shadow: 0 0 0 4px var(--bleu);
+}
 
-html.profil-dyslexie #liste-offres { gap: 1rem; }
+html.profil-motricite .pill {
+  padding: .5rem 1.1rem;
+  font-size: .9rem;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
 
-html.profil-dyslexie .filters { gap: 1.5rem; }
+html.profil-motricite select {
+  min-height: 44px;
+  font-size: 1rem;
+  padding: .5rem .8rem;
+}
+
+html.profil-motricite .toggle-switch { min-height: 44px; }
+
+html.profil-motricite .toggle-track {
+  width: 3.2rem;
+  height: 1.8rem;
+}
+html.profil-motricite .toggle-track::after {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+html.profil-motricite input:checked ~ .toggle-track::after {
+  transform: translateX(1.4rem);
+}
+
+html.profil-motricite .fab {
+  width: 64px;
+  height: 64px;
+  bottom: 2rem;
+  right: 1.5rem;
+}
+
+html.profil-motricite .btn-geo { min-height: 44px; padding: .5rem 1rem; }
+html.profil-motricite .btn-profil-header { min-height: 44px; }
+
+html.profil-motricite #liste-offres { gap: .9rem; }
+
+html.profil-motricite :focus-visible { outline: 4px solid var(--bleu); outline-offset: 4px; }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {

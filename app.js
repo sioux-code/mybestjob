@@ -179,16 +179,38 @@ document.getElementById('filtre-distance').addEventListener('input', e => {
 });
 
 // ── Profils d'accessibilité ───────────────────────────────────────────────────
+const TOUS_PROFILS = ['autisme', 'tdah', 'malvoyant', 'dyslexie', 'daltonien', 'anxiete', 'motricite'];
+
 document.querySelectorAll('.pill--profile').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.pill--profile').forEach(b => {
       b.classList.remove('active'); b.setAttribute('aria-checked', 'false');
     });
     btn.classList.add('active'); btn.setAttribute('aria-checked', 'true');
+
     const profil = btn.dataset.profil;
-    document.documentElement.classList.remove('profil-autisme', 'profil-malvoyant', 'profil-dyslexie');
+    document.documentElement.classList.remove(...TOUS_PROFILS.map(p => `profil-${p}`));
     if (profil !== 'standard') document.documentElement.classList.add(`profil-${profil}`);
+
+    // Slider taille : visible uniquement pour malvoyant
+    document.getElementById('ctrl-taille').hidden = profil !== 'malvoyant';
+
+    // Malvoyant : appliquer taille par défaut
+    if (profil === 'malvoyant') {
+      const val = document.getElementById('slider-taille').value;
+      document.documentElement.style.fontSize = val + 'px';
+    } else {
+      document.documentElement.style.fontSize = '';
+    }
   });
+});
+
+// Slider taille texte (malvoyant)
+document.getElementById('slider-taille').addEventListener('input', e => {
+  const val = e.target.value;
+  document.getElementById('taille-val').textContent = `${val} px`;
+  e.target.setAttribute('aria-valuetext', `${val}px`);
+  document.documentElement.style.fontSize = val + 'px';
 });
 
 document.getElementById('btn-actualiser').addEventListener('click', () => chargerOffres(true));
