@@ -21,7 +21,6 @@ const PROFIL_DEFAUT = {
   experience:  'confirme',
   age:         'tout',
   rqth:        false,
-  seniorEmploi:false,
   permis:      false,
   motsCles:    '',        // ex: "comptabilité, saisie"
   exclus:      '',        // ex: "commercial, manager"
@@ -45,7 +44,6 @@ function appliquerProfilAuFormulaire() {
   document.getElementById('p-experience').value = monProfil.experience;
   document.getElementById('p-age').value        = monProfil.age;
   document.getElementById('p-rqth').checked     = monProfil.rqth;
-  document.getElementById('p-senior-emploi').checked = monProfil.seniorEmploi;
   document.getElementById('p-permis').checked   = monProfil.permis;
   document.getElementById('p-mots').value       = monProfil.motsCles;
   document.getElementById('p-exclus').value     = monProfil.exclus;
@@ -89,7 +87,6 @@ document.getElementById('btn-sauver-profil').addEventListener('click', () => {
     experience:   document.getElementById('p-experience').value,
     age:          document.getElementById('p-age').value,
     rqth:         document.getElementById('p-rqth').checked,
-    seniorEmploi: document.getElementById('p-senior-emploi').checked,
     permis:       document.getElementById('p-permis').checked,
     motsCles:     document.getElementById('p-mots').value,
     exclus:       document.getElementById('p-exclus').value,
