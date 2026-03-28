@@ -117,29 +117,6 @@
     </div>
   </div>
 
-  <!-- ── Profils d'accessibilité ── -->
-  <nav class="profiles-bar" aria-label="Profil d'accessibilité">
-    <span class="filter-label profiles-bar__label">Accessibilité</span>
-    <div class="pill-group profiles-pill-group" role="radiogroup" aria-label="Profil d'accessibilité">
-      <button class="pill pill--profile active" data-profil="standard"  role="radio" aria-checked="true">Standard</button>
-      <button class="pill pill--profile"        data-profil="autisme"   role="radio" aria-checked="false">Autisme · Asperger</button>
-      <button class="pill pill--profile"        data-profil="tdah"      role="radio" aria-checked="false">TDAH</button>
-      <button class="pill pill--profile"        data-profil="malvoyant" role="radio" aria-checked="false">Malvoyant</button>
-      <button class="pill pill--profile"        data-profil="dyslexie"  role="radio" aria-checked="false">Dyslexie+</button>
-      <button class="pill pill--profile"        data-profil="daltonien" role="radio" aria-checked="false">Daltonien</button>
-      <button class="pill pill--profile"        data-profil="anxiete"   role="radio" aria-checked="false">Anxiété</button>
-      <button class="pill pill--profile"        data-profil="motricite" role="radio" aria-checked="false">Motricité réduite</button>
-    </div>
-    <!-- Contrôles contextuels selon le profil -->
-    <div id="ctrl-taille" class="profile-ctrl" hidden>
-      <label class="filter-label" for="slider-taille">Taille du texte</label>
-      <div class="geo-slider-wrap">
-        <input type="range" id="slider-taille" min="16" max="28" step="1" value="21" aria-valuetext="21px">
-        <span id="taille-val">21 px</span>
-      </div>
-    </div>
-  </nav>
-
   <!-- ── Filtres ── -->
   <section class="filters" aria-label="Filtres de recherche">
 
