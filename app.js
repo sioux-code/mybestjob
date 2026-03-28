@@ -11,9 +11,11 @@ let filtreSource  = '';
 let filtreTH      = false;
 let deferredInstall = null;
 
-// ── Service worker ─────────────────────────────────────────────────────────────
+// ── Suppression service worker (source de problèmes de cache) ─────────────────
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
+  });
 }
 
 // ── Installer en PWA ──────────────────────────────────────────────────────────
