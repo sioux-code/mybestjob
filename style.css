@@ -868,29 +868,51 @@ html.profil-daltonien .pill.active { background: #1E3A5F; border-color: #1E3A5F;
 html.profil-daltonien .toggle-track { background: #64748B; }
 html.profil-daltonien input:checked ~ .toggle-track { background: #1E3A5F; }
 
-/* ── Anxiété / stress : tons neutres, aucun rouge/orange agressif ─────────── */
-html.profil-anxiete body { background: #EEEAE4; color: #2C2C2C; }
+/* ── Anxiété / stress : dark pastel — foncé reposant, couleurs douces ────── */
+html.profil-anxiete body      { background: #2A2D35; color: #D4CFC8; }
 
-html.profil-anxiete .badge-haut { background: #334155; color: #fff; border-color: #334155; }
-html.profil-anxiete .badge-mid  { background: #64748B; color: #fff; border-color: #64748B; }
-html.profil-anxiete .badge-low  { background: #94A3B8; color: #1e293b; border-color: #94A3B8; }
-html.profil-anxiete .badge-non  { background: #E2E8F0; color: #475569; border-color: #CBD5E1; }
+html.profil-anxiete header    { background: #21242B; border-bottom-color: #3C4050; box-shadow: none; }
+html.profil-anxiete header::before { background: linear-gradient(90deg, #5B6B8A, #8A7FA0, #A07A8A); }
+html.profil-anxiete h1        { color: #D4CFC8; }
+html.profil-anxiete h1 strong { color: #A0B4CC; }
+html.profil-anxiete .subtitle { color: #8A8A9A; }
+html.profil-anxiete .btn-profil-header { background: #3C4050; border-color: #5B6B8A; color: #A0B4CC; }
 
-/* Supprime les indicateurs rouge "Hors profil" stressants */
+html.profil-anxiete .profiles-bar { background: #21242B; border-color: #3C4050; }
+html.profil-anxiete .filters      { background: #252830; border-color: #3C4050; }
+html.profil-anxiete .filter-label { color: #8A8A9A; }
+html.profil-anxiete .toggle-label-text { color: #C4BFB8; }
+html.profil-anxiete .info-bar     { color: #8A8A9A; }
+
+html.profil-anxiete .pill         { background: #2A2D35; border-color: #3C4050; color: #C4BFB8; }
+html.profil-anxiete .pill:hover   { border-color: #5B6B8A; color: #A0B4CC; }
+html.profil-anxiete .pill.active  { background: #3D4A60; border-color: #5B6B8A; color: #C8D8EA; }
+html.profil-anxiete select        { background: #21242B; border-color: #3C4050; color: #C4BFB8; }
+
+html.profil-anxiete .carte        { background: #31343D; border-color: #3C4050; box-shadow: none; }
+html.profil-anxiete .carte:hover  { box-shadow: 0 0 0 2px #5B6B8A; transform: none; }
+html.profil-anxiete .carte-titre  { color: #D4CFC8; }
+html.profil-anxiete .carte-source { color: #6A6A7A; opacity: 1; }
+
+html.profil-anxiete .meta-tag              { background: #3C404A; border-color: #4C5060; color: #B4B0AA; }
+html.profil-anxiete .meta-tag--profil      { background: #2E3D4A; border-color: #4A6478; color: #A0C0D4; }
 html.profil-anxiete .meta-tag--hors-profil { display: none; }
-html.profil-anxiete .meta-tag--profil { background: #F1F5F9; border-color: #94A3B8; color: #475569; }
+html.profil-anxiete .meta-tag--dist        { background: #2E3A4A; border-color: #4A5E78; color: #90AABF; }
+html.profil-anxiete .meta-tag--th          { background: #2E3A4E; border-color: #4A5A7A; color: #9AAAC8; }
 
-html.profil-anxiete .carte { background: #F5F1EB; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
-html.profil-anxiete .carte:hover { box-shadow: 0 2px 8px rgba(0,0,0,.10); transform: none; }
-html.profil-anxiete .etat-erreur { display: none; } /* masque les alertes */
+html.profil-anxiete .badge-haut { background: #3D4A60; color: #C8D8EA; border-color: #4A5E7A; }
+html.profil-anxiete .badge-mid  { background: #3D4055; color: #BEB8D0; border-color: #4A4A6A; }
+html.profil-anxiete .badge-low  { background: #3D3A4A; color: #B0AABB; border-color: #4A4858; }
+html.profil-anxiete .badge-non  { background: #333540; color: #8A8A9A; border-color: #404250; }
 
-html.profil-anxiete .carte[data-niveau="haut"]  { border-left-color: #334155; }
-html.profil-anxiete .carte[data-niveau="mid"]   { border-left-color: #64748B; }
-html.profil-anxiete .carte[data-niveau="low"]   { border-left-color: #94A3B8; }
-html.profil-anxiete .carte[data-niveau="non"]   { border-left-color: #CBD5E1; }
+html.profil-anxiete .carte[data-niveau="haut"]  { border-left-color: #5B6B8A; }
+html.profil-anxiete .carte[data-niveau="mid"]   { border-left-color: #7A6B8A; }
+html.profil-anxiete .carte[data-niveau="low"]   { border-left-color: #6A6A7A; }
+html.profil-anxiete .carte[data-niveau="non"]   { border-left-color: #4A4A5A; }
 
-html.profil-anxiete .pill.active { background: #334155; border-color: #334155; }
-html.profil-anxiete header::before { background: linear-gradient(90deg, #334155, #64748B); }
+html.profil-anxiete .etat-erreur { display: none; }
+html.profil-anxiete .fab         { background: #3D4A60; }
+html.profil-anxiete .fab:hover   { background: #4A5A70; }
 
 /* ── Motricité réduite : grandes zones de clic, pas de hover fin ─────────── */
 html.profil-motricite .carte {
