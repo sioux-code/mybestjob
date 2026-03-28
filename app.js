@@ -1,7 +1,7 @@
 'use strict';
 
 // ── Constantes ────────────────────────────────────────────────────────────────
-const CLE_CACHE   = 'mybestjob-offres-v2';
+const CLE_CACHE   = 'mybestjob-offres-v3';
 const CLE_DATE    = 'mybestjob-date';
 const CLE_PROFIL  = 'mybestjob-profil';
 
@@ -215,6 +215,38 @@ document.getElementById('slider-taille').addEventListener('input', e => {
 
 document.getElementById('btn-actualiser').addEventListener('click', () => chargerOffres(true));
 
+// ── Réinitialiser filtres ─────────────────────────────────────────────────────
+document.getElementById('btn-reset-filtres').addEventListener('click', () => {
+  // Compatibilité → Très compatible (score 8)
+  scoreMin = 8;
+  document.querySelectorAll('[data-filter="score"]').forEach(b => {
+    const actif = b.dataset.score === '8';
+    b.classList.toggle('active', actif);
+    b.setAttribute('aria-checked', String(actif));
+  });
+
+  // Contrat / Source → Tous
+  filtreContrat = '';
+  filtreSource  = '';
+  document.getElementById('filtre-contrat').value = '';
+  document.getElementById('filtre-source').value  = '';
+
+  // Toggles → off
+  filtreTH = false;
+  filtreProfil = false;
+  const th = document.getElementById('filtre-th');
+  th.checked = false; th.setAttribute('aria-checked', 'false');
+  const prof = document.getElementById('filtre-profil');
+  prof.checked = false; prof.setAttribute('aria-checked', 'false');
+
+  afficher();
+});
+
+// ── Utilitaires ───────────────────────────────────────────────────────────────
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // ── Score profil dynamique ────────────────────────────────────────────────────
 const FORMATION_NIVEAUX = {
   aucun: 0, cap: 1, bac: 2, bac2: 3, bac3: 4,
@@ -255,7 +287,7 @@ function scoreProfilPerso(o) {
   if (monProfil.motsCles) {
     const mots = monProfil.motsCles.split(',').map(m => m.trim()).filter(Boolean);
     for (const mot of mots) {
-      if (mot && new RegExp(mot, 'i').test(texte)) s += 2;
+      if (mot && new RegExp(escapeRegex(mot), 'i').test(texte)) s += 2;
     }
   }
 
@@ -263,7 +295,7 @@ function scoreProfilPerso(o) {
   if (monProfil.exclus) {
     const excl = monProfil.exclus.split(',').map(m => m.trim()).filter(Boolean);
     for (const mot of excl) {
-      if (mot && new RegExp(mot, 'i').test(texte)) s -= 4;
+      if (mot && new RegExp(escapeRegex(mot), 'i').test(texte)) s -= 4;
     }
   }
 
@@ -306,7 +338,7 @@ function afficher() {
   const compteur = document.getElementById('compteur');
 
   let filtrées = toutesOffres.filter(o => o.score >= scoreMin);
-  if (filtreContrat) filtrées = filtrées.filter(o => o.contrat.toLowerCase().includes(filtreContrat.toLowerCase()));
+  if (filtreContrat) filtrées = filtrées.filter(o => o.contrat === filtreContrat);
   if (filtreSource)  filtrées = filtrées.filter(o => o.source === filtreSource);
   if (filtreTH)      filtrées = filtrées.filter(o => o.th === true);
   if (filtreProfil)  filtrées = filtrées.filter(o => scoreProfilPerso(o) >= 7);
@@ -360,15 +392,18 @@ function afficher() {
 async function chargerOffres(forceRefresh = false) {
   const errDiv = document.getElementById('erreurs');
   const majEl  = document.getElementById('derniere-maj');
+  const fab    = document.getElementById('btn-actualiser');
 
   errDiv.hidden = true;
   document.getElementById('liste-offres').innerHTML = '';
   document.getElementById('vide').hidden = true;
+  fab.classList.add('fab--loading');
+  fab.disabled = true;
 
   if (!forceRefresh) {
     try {
-      const cached     = sessionStorage.getItem(CLE_CACHE);
-      const cachedDate = sessionStorage.getItem(CLE_DATE);
+      const cached     = localStorage.getItem(CLE_CACHE);
+      const cachedDate = localStorage.getItem(CLE_DATE);
       if (cached && cachedDate && Date.now() - Number(cachedDate) < 5 * 60_000) {
         toutesOffres = JSON.parse(cached);
         majEl.textContent = `Actualis\u00e9 il y a moins de 5\u00a0min`;
@@ -386,8 +421,8 @@ async function chargerOffres(forceRefresh = false) {
     if (!res.ok) throw new Error(`Erreur serveur ${res.status}`);
     const data = await res.json();
     toutesOffres = data.offres || [];
-    sessionStorage.setItem(CLE_CACHE, JSON.stringify(toutesOffres));
-    sessionStorage.setItem(CLE_DATE, String(Date.now()));
+    localStorage.setItem(CLE_CACHE, JSON.stringify(toutesOffres));
+    localStorage.setItem(CLE_DATE, String(Date.now()));
     const now = new Date();
     majEl.textContent = `Mis \u00e0 jour \u00e0 ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
     if (data.errors?.length) {
@@ -395,7 +430,7 @@ async function chargerOffres(forceRefresh = false) {
       errDiv.textContent = 'Avertissement\u00a0: ' + data.errors.join(' \u2014 ');
     }
   } catch (err) {
-    const cached = sessionStorage.getItem(CLE_CACHE);
+    const cached = localStorage.getItem(CLE_CACHE);
     if (cached) {
       try { toutesOffres = JSON.parse(cached); } catch {}
       majEl.textContent = '(donn\u00e9es en cache)';
@@ -406,6 +441,8 @@ async function chargerOffres(forceRefresh = false) {
         : 'Impossible de charger les offres\u00a0: ' + err.message;
     }
   } finally {
+    fab.classList.remove('fab--loading');
+    fab.disabled = false;
     afficher();
   }
 }

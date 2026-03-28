@@ -552,9 +552,31 @@ select:focus { outline: 3px solid var(--bleu); }
   color: var(--texte-sec);
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   gap: .25rem;
 }
+
+.info-bar-right {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+
+.btn-reset {
+  background: none;
+  border: 1px solid var(--bordure);
+  border-radius: 20px;
+  padding: .15rem .65rem;
+  font-family: inherit;
+  font-size: .75rem;
+  color: var(--texte-sec);
+  cursor: pointer;
+  transition: border-color .12s, color .12s;
+  white-space: nowrap;
+}
+.btn-reset:hover { border-color: var(--bleu); color: var(--bleu); }
 
 /* ── Liste de cartes ─────────────────────────────────────────────────────── */
 #liste-offres {
@@ -670,7 +692,7 @@ select:focus { outline: 3px solid var(--bleu); }
 }
 
 #filtre-distance {
-  width: 110px;
+  width: clamp(80px, 20vw, 130px);
   accent-color: var(--bleu);
   cursor: pointer;
 }
@@ -759,6 +781,9 @@ select:focus { outline: 3px solid var(--bleu); }
 
 .fab:hover { background: var(--bleu-sombre); }
 .fab svg { width: 22px; height: 22px; }
+.fab--loading { opacity: .7; cursor: wait; }
+.fab--loading svg { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Focus visible global ─────────────────────────────────────────────────── */
 :focus-visible {
@@ -1107,18 +1132,26 @@ html.profil-motricite #liste-offres { gap: .9rem; }
 html.profil-motricite :focus-visible { outline: 4px solid var(--bleu); outline-offset: 4px; }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  body { max-width: 100%; }
+  .filters { gap: .9rem; }
+}
+
 @media (max-width: 600px) {
   html    { font-size: 16px; }
   .header-inner  { padding: .65rem 1rem; }
   .profiles-bar  { padding: .5rem 1rem; }
   .filters { padding: .7rem 1rem; }
   #liste-offres { padding: .25rem .5rem; }
+  .info-bar { flex-direction: column; align-items: flex-start; gap: .4rem; }
+  .info-bar-right { gap: .5rem; }
 }
 
 /* ── Préférence "réduction de mouvement" ─────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .carte { transition: none; }
   .fab   { transition: none; }
+  .fab--loading svg { animation: none; }
 }
 
 /* ── Mode sombre système ─────────────────────────────────────────────────── */
