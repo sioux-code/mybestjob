@@ -7,7 +7,6 @@ const CLE_PROFIL  = 'mybestjob-profil';
 
 let toutesOffres   = [];
 let filtreContrat  = '';
-let filtreSource   = '';
 let filtreTH       = false;
 let filtreProfil   = false;
 let userLat        = null;
@@ -113,8 +112,6 @@ document.getElementById('install-btn').addEventListener('click', async () => {
 });
 
 document.getElementById('filtre-contrat').addEventListener('change', e => { filtreContrat = e.target.value; afficher(); });
-document.getElementById('filtre-source').addEventListener('change',  e => { filtreSource  = e.target.value; afficher(); });
-
 document.getElementById('filtre-profil').addEventListener('change', e => {
   filtreProfil = e.target.checked;
   e.target.setAttribute('aria-checked', String(e.target.checked));
@@ -168,9 +165,7 @@ document.getElementById('btn-actualiser').addEventListener('click', () => charge
 document.getElementById('btn-reset-filtres').addEventListener('click', () => {
   // Contrat / Source → Tous
   filtreContrat = '';
-  filtreSource  = '';
   document.getElementById('filtre-contrat').value = '';
-  document.getElementById('filtre-source').value  = '';
 
   // Toggles → off
   filtreTH = false;
@@ -291,7 +286,6 @@ function afficher() {
 
   let filtrées = avecScore.slice();
   if (filtreContrat) filtrées = filtrées.filter(({ o }) => o.contrat === filtreContrat);
-  if (filtreSource)  filtrées = filtrées.filter(({ o }) => o.source  === filtreSource);
   if (filtreTH)      filtrées = filtrées.filter(({ o }) => o.th === true);
   if (filtreProfil)  filtrées = filtrées.filter(({ sp }) => sp >= 7);
   if (userLat !== null) {
