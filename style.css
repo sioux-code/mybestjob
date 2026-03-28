@@ -159,6 +159,33 @@ h1 strong {
   letter-spacing: .03em;
 }
 
+/* ── Actions header ─────────────────────────────────────────────────────── */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-shrink: 0;
+}
+
+.btn-profil-header {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  background: var(--bleu-clair);
+  color: var(--bleu);
+  border: 2px solid var(--bleu);
+  border-radius: 20px;
+  padding: .3rem .85rem;
+  font-family: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .12s;
+}
+.btn-profil-header svg { width: 15px; height: 15px; }
+.btn-profil-header:hover { background: var(--bleu); color: #fff; }
+
 /* ── Bouton installer ────────────────────────────────────────────────────── */
 .btn-install {
   background: var(--bleu);
@@ -173,6 +200,142 @@ h1 strong {
   white-space: nowrap;
 }
 .btn-install:hover { background: var(--bleu-sombre); }
+
+/* ── Modal Mon profil ────────────────────────────────────────────────────── */
+.modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+.modal[hidden] { display: none !important; }
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(2px);
+}
+
+.modal-box {
+  position: relative;
+  background: var(--carte-fond);
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.25);
+  width: min(480px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem .8rem;
+  border-bottom: 1px solid var(--bordure);
+  position: sticky;
+  top: 0;
+  background: var(--carte-fond);
+  z-index: 1;
+}
+
+.modal-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--texte);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--texte-sec);
+  cursor: pointer;
+  padding: .2rem .4rem;
+  border-radius: 4px;
+}
+.modal-close:hover { background: var(--fond); color: var(--texte); }
+
+.modal-body {
+  padding: 1rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.modal-footer {
+  padding: .9rem 1.4rem 1.1rem;
+  border-top: 1px solid var(--bordure);
+  display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  background: var(--carte-fond);
+}
+
+.btn-sauver {
+  background: var(--bleu);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .55rem 1.4rem;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-sauver:hover { background: var(--bleu-sombre); }
+
+.profil-field {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.profil-label {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--texte-sec);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.profil-checks {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.profil-check {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .9rem;
+  cursor: pointer;
+}
+
+.profil-check input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--bleu);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.profil-field input[type="text"] {
+  font-family: inherit;
+  font-size: .9rem;
+  padding: .4rem .65rem;
+  border: 2px solid var(--bordure);
+  border-radius: 8px;
+  background: var(--fond);
+  color: var(--texte);
+}
+.profil-field input[type="text"]:focus { outline: 3px solid var(--bleu); }
+
+.profil-hint {
+  font-size: .72rem;
+  color: var(--texte-sec);
+  max-width: none;
+}
 
 /* ── Barre de profils d'accessibilité ───────────────────────────────────── */
 .profiles-bar {

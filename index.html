@@ -30,16 +30,97 @@
           <p class="subtitle">Emplois autour de Provins</p>
         </div>
       </div>
-      <button id="install-btn" class="btn-install" hidden aria-label="Installer l'application sur cet appareil">
-        Installer
-      </button>
+      <div class="header-actions">
+        <button id="btn-mon-profil" class="btn-profil-header" aria-haspopup="dialog" aria-label="Configurer mon profil">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span id="btn-profil-label">Mon profil</span>
+        </button>
+        <button id="install-btn" class="btn-install" hidden aria-label="Installer l'application sur cet appareil">
+          Installer
+        </button>
+      </div>
     </div>
   </header>
 
+  <!-- ── Modal Mon profil ── -->
+  <div id="modal-profil" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-titre">
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 id="modal-titre">Mon profil</h2>
+        <button class="modal-close" id="modal-close" aria-label="Fermer">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <div class="profil-field">
+          <label class="profil-label" for="p-formation">Niveau de formation</label>
+          <select id="p-formation">
+            <option value="aucun">Sans diplôme</option>
+            <option value="cap">CAP / BEP</option>
+            <option value="bac">Bac</option>
+            <option value="bac2">Bac+2</option>
+            <option value="bac3">Bac+3 et plus</option>
+          </select>
+        </div>
+
+        <div class="profil-field">
+          <label class="profil-label" for="p-experience">Expérience professionnelle</label>
+          <select id="p-experience">
+            <option value="debutant">Débutante / peu d'expérience</option>
+            <option value="junior">1 à 3 ans</option>
+            <option value="confirme">3 à 10 ans</option>
+            <option value="senior">Plus de 10 ans</option>
+          </select>
+        </div>
+
+        <div class="profil-field">
+          <label class="profil-label" for="p-age">Tranche d'âge</label>
+          <select id="p-age">
+            <option value="tout">Non précisé</option>
+            <option value="moins30">Moins de 30 ans</option>
+            <option value="30-49">30 – 49 ans</option>
+            <option value="50plus">50 ans et plus</option>
+          </select>
+        </div>
+
+        <div class="profil-field">
+          <span class="profil-label">Situations particulières</span>
+          <div class="profil-checks">
+            <label class="profil-check">
+              <input type="checkbox" id="p-rqth"> RQTH / Travailleur handicapé
+            </label>
+            <label class="profil-check">
+              <input type="checkbox" id="p-senior-emploi"> Bénéficiaire emploi senior
+            </label>
+            <label class="profil-check">
+              <input type="checkbox" id="p-permis"> Permis B
+            </label>
+          </div>
+        </div>
+
+        <div class="profil-field">
+          <label class="profil-label" for="p-mots">Mots-clés métiers qui m'intéressent</label>
+          <input type="text" id="p-mots" placeholder="ex: comptabilité, saisie, logistique…" autocomplete="off">
+          <p class="profil-hint">Séparez par des virgules</p>
+        </div>
+
+        <div class="profil-field">
+          <label class="profil-label" for="p-exclus">Mots-clés à exclure</label>
+          <input type="text" id="p-exclus" placeholder="ex: commercial, manager, accueil…" autocomplete="off">
+          <p class="profil-hint">Séparez par des virgules</p>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn-sauver" id="btn-sauver-profil">Enregistrer</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ── Profils d'accessibilité ── -->
   <nav class="profiles-bar" aria-label="Profil d'accessibilité">
-    <span class="filter-label" id="label-profil">Profil</span>
-    <div class="pill-group" role="radiogroup" aria-labelledby="label-profil">
+    <span class="filter-label" id="label-access">Accessibilité</span>
+    <div class="pill-group" role="radiogroup" aria-labelledby="label-access">
       <button class="pill pill--profile active" data-profil="standard"  role="radio" aria-checked="true">Standard</button>
       <button class="pill pill--profile"        data-profil="autisme"   role="radio" aria-checked="false">Autisme · Asperger</button>
       <button class="pill pill--profile"        data-profil="malvoyant" role="radio" aria-checked="false">Malvoyant</button>

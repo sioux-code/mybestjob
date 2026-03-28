@@ -3,24 +3,103 @@
 // ── Constantes ────────────────────────────────────────────────────────────────
 const CLE_CACHE   = 'mybestjob-offres-v2';
 const CLE_DATE    = 'mybestjob-date';
+const CLE_PROFIL  = 'mybestjob-profil';
 
-let toutesOffres  = [];
-let scoreMin      = 8;
-let filtreContrat = '';
-let filtreSource  = '';
-let filtreTH      = false;
-let filtreProfil  = false;
-let userLat       = null;
-let userLng       = null;
-let filtreDistance = 50; // km
+let toutesOffres   = [];
+let scoreMin       = 8;
+let filtreContrat  = '';
+let filtreSource   = '';
+let filtreTH       = false;
+let filtreProfil   = false;
+let userLat        = null;
+let userLng        = null;
+let filtreDistance = 50;
 let deferredInstall = null;
 
-// ── Suppression service worker (source de problèmes de cache) ─────────────────
+// ── Profil utilisateur (persisté en localStorage) ─────────────────────────────
+const PROFIL_DEFAUT = {
+  formation:   'aucun',   // aucun | cap | bac | bac2 | bac3
+  experience:  'confirme',
+  age:         'tout',
+  rqth:        false,
+  seniorEmploi:false,
+  permis:      false,
+  motsCles:    '',        // ex: "comptabilité, saisie"
+  exclus:      '',        // ex: "commercial, manager"
+};
+
+let monProfil = PROFIL_DEFAUT;
+
+function chargerProfil() {
+  try {
+    const stored = localStorage.getItem(CLE_PROFIL);
+    if (stored) monProfil = { ...PROFIL_DEFAUT, ...JSON.parse(stored) };
+  } catch {}
+}
+
+function sauverProfil() {
+  localStorage.setItem(CLE_PROFIL, JSON.stringify(monProfil));
+}
+
+function appliquerProfilAuFormulaire() {
+  document.getElementById('p-formation').value  = monProfil.formation;
+  document.getElementById('p-experience').value = monProfil.experience;
+  document.getElementById('p-age').value        = monProfil.age;
+  document.getElementById('p-rqth').checked     = monProfil.rqth;
+  document.getElementById('p-senior-emploi').checked = monProfil.seniorEmploi;
+  document.getElementById('p-permis').checked   = monProfil.permis;
+  document.getElementById('p-mots').value       = monProfil.motsCles;
+  document.getElementById('p-exclus').value     = monProfil.exclus;
+
+  // Affiche un indicateur si profil configuré
+  const label = document.getElementById('btn-profil-label');
+  const configured = monProfil.formation !== 'aucun' || monProfil.motsCles || monProfil.exclus;
+  label.textContent = configured ? 'Mon profil ✓' : 'Mon profil';
+}
+
+// ── Suppression service worker ─────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(regs => {
     regs.forEach(r => r.unregister());
   });
 }
+
+// ── Modal Mon profil ──────────────────────────────────────────────────────────
+function ouvrirModal() {
+  appliquerProfilAuFormulaire();
+  document.getElementById('modal-profil').hidden = false;
+  document.getElementById('modal-close').focus();
+}
+
+function fermerModal() {
+  document.getElementById('modal-profil').hidden = true;
+  document.getElementById('btn-mon-profil').focus();
+}
+
+document.getElementById('btn-mon-profil').addEventListener('click', ouvrirModal);
+document.getElementById('modal-close').addEventListener('click', fermerModal);
+document.getElementById('modal-overlay').addEventListener('click', fermerModal);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('modal-profil').hidden) fermerModal();
+});
+
+document.getElementById('btn-sauver-profil').addEventListener('click', () => {
+  monProfil = {
+    formation:    document.getElementById('p-formation').value,
+    experience:   document.getElementById('p-experience').value,
+    age:          document.getElementById('p-age').value,
+    rqth:         document.getElementById('p-rqth').checked,
+    seniorEmploi: document.getElementById('p-senior-emploi').checked,
+    permis:       document.getElementById('p-permis').checked,
+    motsCles:     document.getElementById('p-mots').value,
+    exclus:       document.getElementById('p-exclus').value,
+  };
+  sauverProfil();
+  appliquerProfilAuFormulaire();
+  fermerModal();
+  afficher();
+});
 
 // ── Installer en PWA ──────────────────────────────────────────────────────────
 window.addEventListener('beforeinstallprompt', e => {
@@ -41,36 +120,23 @@ document.getElementById('install-btn').addEventListener('click', async () => {
 document.querySelectorAll('[data-filter="score"]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('[data-filter="score"]').forEach(b => {
-      b.classList.remove('active');
-      b.setAttribute('aria-checked', 'false');
+      b.classList.remove('active'); b.setAttribute('aria-checked', 'false');
     });
-    btn.classList.add('active');
-    btn.setAttribute('aria-checked', 'true');
+    btn.classList.add('active'); btn.setAttribute('aria-checked', 'true');
     scoreMin = parseInt(btn.dataset.score, 10);
     afficher();
   });
 });
 
-// ── Filtres — contrat ──────────────────────────────────────────────────────────
-document.getElementById('filtre-contrat').addEventListener('change', e => {
-  filtreContrat = e.target.value;
-  afficher();
-});
+document.getElementById('filtre-contrat').addEventListener('change', e => { filtreContrat = e.target.value; afficher(); });
+document.getElementById('filtre-source').addEventListener('change',  e => { filtreSource  = e.target.value; afficher(); });
 
-// ── Filtres — source ───────────────────────────────────────────────────────────
-document.getElementById('filtre-source').addEventListener('change', e => {
-  filtreSource = e.target.value;
-  afficher();
-});
-
-// ── Filtres — profil perso ────────────────────────────────────────────────────
 document.getElementById('filtre-profil').addEventListener('change', e => {
   filtreProfil = e.target.checked;
   e.target.setAttribute('aria-checked', String(e.target.checked));
   afficher();
 });
 
-// ── Filtres — TH ──────────────────────────────────────────────────────────────
 document.getElementById('filtre-th').addEventListener('change', e => {
   filtreTH = e.target.checked;
   e.target.setAttribute('aria-checked', String(e.target.checked));
@@ -90,29 +156,18 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 document.getElementById('btn-geo').addEventListener('click', () => {
   const btn   = document.getElementById('btn-geo');
   const label = document.getElementById('geo-label');
-
-  if (!navigator.geolocation) {
-    label.textContent = 'Non supporté';
-    return;
-  }
-
+  if (!navigator.geolocation) { label.textContent = 'Non supporté'; return; }
   label.textContent = 'Localisation…';
   btn.disabled = true;
-
   navigator.geolocation.getCurrentPosition(
     pos => {
-      userLat = pos.coords.latitude;
-      userLng = pos.coords.longitude;
+      userLat = pos.coords.latitude; userLng = pos.coords.longitude;
       label.textContent = 'Position détectée';
-      btn.disabled = false;
-      btn.classList.add('btn-geo--active');
+      btn.disabled = false; btn.classList.add('btn-geo--active');
       document.getElementById('geo-slider-wrap').hidden = false;
       afficher();
     },
-    () => {
-      label.textContent = 'Accès refusé';
-      btn.disabled = false;
-    }
+    () => { label.textContent = 'Accès refusé'; btn.disabled = false; }
   );
 });
 
@@ -127,68 +182,80 @@ document.getElementById('filtre-distance').addEventListener('input', e => {
 document.querySelectorAll('.pill--profile').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.pill--profile').forEach(b => {
-      b.classList.remove('active');
-      b.setAttribute('aria-checked', 'false');
+      b.classList.remove('active'); b.setAttribute('aria-checked', 'false');
     });
-    btn.classList.add('active');
-    btn.setAttribute('aria-checked', 'true');
-
+    btn.classList.add('active'); btn.setAttribute('aria-checked', 'true');
     const profil = btn.dataset.profil;
     document.documentElement.classList.remove('profil-autisme', 'profil-malvoyant', 'profil-dyslexie');
-    if (profil !== 'standard') {
-      document.documentElement.classList.add(`profil-${profil}`);
-    }
+    if (profil !== 'standard') document.documentElement.classList.add(`profil-${profil}`);
   });
 });
 
-// ── Actualiser ────────────────────────────────────────────────────────────────
-document.getElementById('btn-actualiser').addEventListener('click', () => {
-  chargerOffres(true);
-});
+document.getElementById('btn-actualiser').addEventListener('click', () => chargerOffres(true));
 
-// ── Score profil (sans bac, 50 ans, femme) ────────────────────────────────────
-const NIVEAUX_OK   = ['', 'Aucune formation scolaire', 'CAP, BEP et équivalents'];
-const NIVEAUX_BAC  = ['Bac ou équivalent'];
-const NIVEAUX_SUP  = ['Bac+2 ou équivalents', 'Bac+3, Bac+4 ou équivalents'];
+// ── Score profil dynamique ────────────────────────────────────────────────────
+const FORMATION_NIVEAUX = {
+  aucun: 0, cap: 1, bac: 2, bac2: 3, bac3: 4,
+};
 
-// Mots-clés valorisés pour profil senior/femme sans diplôme
-const PROFIL_POSITIF = [
-  /expérience|expérimenté/i, /senior/i, /autonome/i,
-  /sans diplôme|sans qualification/i, /débutant accepté/i,
-  /aide.soignant/i, /auxiliaire/i, /agent de service/i,
-  /nettoyage|ménage|entretien/i, /lingerie/i,
-  /caissier|caissière/i, /vendeur|vendeuse/i,
-  /préparatrice|préparateur/i, /assistante|assistant/i,
-  /secrétaire/i, /agent administratif/i,
-  /aide.cuisine|plonge/i, /agent.*restauration/i,
-];
-
-const PROFIL_NEGATIF = [
-  /bac\+[23456]/i, /master|doctorat|ingénieur/i,
-  /cadre supérieur/i, /directeur/i, /chef de projet/i,
-  /jeune diplômé/i, /junior/i, /permis (b|c|d|e) obligatoire/i,
-];
+const NIVEAU_FT = {
+  '':                              0,
+  'Aucune formation scolaire':     0,
+  'CAP, BEP et équivalents':       1,
+  'Bac ou équivalent':             2,
+  'Bac+2 ou équivalents':          3,
+  'Bac+3, Bac+4 ou équivalents':   4,
+};
 
 function scoreProfilPerso(o) {
-  const texte = `${o.titre} ${o.niveauFormation || ''} ${o.experience || ''} ${o.qualification || ''}`;
+  const texte = `${o.titre} ${o.niveauFormation || ''} ${o.experience || ''} ${o.qualification || ''}`.toLowerCase();
   let s = 5;
 
-  // Niveau de formation
-  if (NIVEAUX_OK.includes(o.niveauFormation))  s += 2;
-  if (NIVEAUX_BAC.includes(o.niveauFormation)) s += 0;
-  if (NIVEAUX_SUP.includes(o.niveauFormation)) s -= 3;
+  // Formation : l'offre demande-t-elle plus que ce que j'ai ?
+  const niveauOffre = NIVEAU_FT[o.niveauFormation] ?? 0;
+  const niveauMoi   = FORMATION_NIVEAUX[monProfil.formation] ?? 0;
+  const ecart = niveauOffre - niveauMoi;
+  if      (ecart <= 0) s += 2;  // accessible
+  else if (ecart === 1) s -= 1; // légèrement au-dessus
+  else                 s -= 3;  // trop élevé
 
-  // Expérience : débutant = bon signe
-  if (/débutant accepté/i.test(o.experience || '')) s += 1;
+  // Expérience
+  if (/débutant accepté/i.test(o.experience || '')) {
+    if (monProfil.experience === 'debutant') s += 2;
+    else s += 1;
+  }
+  if (monProfil.experience === 'senior' && /senior|expérimenté|confirmé/i.test(texte)) s += 1;
 
-  // Mots-clés positifs / négatifs
-  for (const p of PROFIL_POSITIF) if (p.test(texte)) s++;
-  for (const p of PROFIL_NEGATIF) if (p.test(texte)) s--;
+  // RQTH
+  if (monProfil.rqth && o.th) s += 2;
+
+  // Mots-clés personnalisés (positifs)
+  if (monProfil.motsCles) {
+    const mots = monProfil.motsCles.split(',').map(m => m.trim()).filter(Boolean);
+    for (const mot of mots) {
+      if (mot && new RegExp(mot, 'i').test(texte)) s += 2;
+    }
+  }
+
+  // Mots-clés exclus
+  if (monProfil.exclus) {
+    const excl = monProfil.exclus.split(',').map(m => m.trim()).filter(Boolean);
+    for (const mot of excl) {
+      if (mot && new RegExp(mot, 'i').test(texte)) s -= 4;
+    }
+  }
+
+  // Âge 50+
+  if (monProfil.age === '50plus' && /senior|expérimenté|confirmé/i.test(texte)) s += 1;
+  if (monProfil.age === '50plus' && /jeune diplômé|junior/i.test(texte)) s -= 2;
+
+  // Permis
+  if (!monProfil.permis && /permis\s*b\s*obligatoire|véhicule exigé/i.test(texte)) s -= 2;
 
   return Math.max(0, Math.min(10, s));
 }
 
-// ── Score → métadonnées visuelles ─────────────────────────────────────────────
+// ── Score → badges Asperger ───────────────────────────────────────────────────
 function niveauScore(score) {
   if (score >= 8) return 'haut';
   if (score >= 6) return 'mid';
@@ -206,10 +273,8 @@ function badgeScore(score) {
 // ── Echappement HTML ───────────────────────────────────────────────────────────
 function esc(str) {
   return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 // ── Rendu ──────────────────────────────────────────────────────────────────────
@@ -225,7 +290,7 @@ function afficher() {
   if (filtreProfil)  filtrées = filtrées.filter(o => scoreProfilPerso(o) >= 7);
   if (userLat !== null) {
     filtrées = filtrées.filter(o => {
-      if (o.lat == null || o.lng == null) return true; // garde si pas de coords
+      if (o.lat == null || o.lng == null) return true;
       return haversineKm(userLat, userLng, o.lat, o.lng) <= filtreDistance;
     });
   }
@@ -233,38 +298,34 @@ function afficher() {
   const nb = filtrées.length;
   compteur.textContent = `${nb} offre${nb > 1 ? 's' : ''} affich\u00e9e${nb > 1 ? 's' : ''}`;
 
-  if (nb === 0) {
-    liste.innerHTML = '';
-    vide.hidden = false;
-    return;
-  }
+  if (nb === 0) { liste.innerHTML = ''; vide.hidden = false; return; }
   vide.hidden = true;
 
   liste.innerHTML = filtrées.map(o => {
     const { cls, texte } = badgeScore(o.score);
-    const niveau = niveauScore(o.score);
-    const metaLieu    = o.lieu    ? `<span class="meta-tag">Lieu\u00a0: ${esc(o.lieu)}</span>`       : '';
-    const metaContrat = o.contrat ? `<span class="meta-tag">Contrat\u00a0: ${esc(o.contrat)}</span>` : '';
-    const metaDate    = o.date    ? `<span class="meta-tag">Date\u00a0: ${esc(o.date)}</span>`       : '';
-    const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th" title="Poste accessible aux travailleurs handicap\u00e9s">\u267F TH</span>` : '';
-    const profil = scoreProfilPerso(o);
+    const niveau  = niveauScore(o.score);
+    const profil  = scoreProfilPerso(o);
+    const dist    = (userLat !== null && o.lat != null && o.lng != null)
+                    ? Math.round(haversineKm(userLat, userLng, o.lat, o.lng)) : null;
+
     const metaProfil  = profil >= 7
-      ? `<span class="meta-tag meta-tag--profil" title="Accessible sans bac, exp\u00e9rience valoris\u00e9e">\u2665 Pour moi</span>`
+      ? `<span class="meta-tag meta-tag--profil">\u2665 Pour moi</span>`
       : profil <= 3
-      ? `<span class="meta-tag meta-tag--hors-profil" title="Probablement hors profil (bac+ requis ou cadre)">\u26A0 Hors profil</span>`
+      ? `<span class="meta-tag meta-tag--hors-profil">\u26A0 Hors profil</span>`
       : '';
-    const dist = (userLat !== null && o.lat != null && o.lng != null)
-      ? Math.round(haversineKm(userLat, userLng, o.lat, o.lng))
-      : null;
-    const metaDist = dist !== null ? `<span class="meta-tag meta-tag--dist">\uD83D\uDCCD ${dist}\u00a0km</span>` : '';
+    const metaDist    = dist !== null ? `<span class="meta-tag meta-tag--dist">\uD83D\uDCCD ${dist}\u00a0km</span>` : '';
+    const metaLieu    = o.lieu    ? `<span class="meta-tag">${esc(o.lieu)}</span>` : '';
+    const metaContrat = o.contrat ? `<span class="meta-tag">${esc(o.contrat)}</span>` : '';
+    const metaDate    = o.date    ? `<span class="meta-tag">${esc(o.date)}</span>` : '';
+    const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th">\u267F TH</span>` : '';
+
     return `
       <li role="listitem">
         <a class="carte" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer"
-           data-niveau="${niveau}"
-           aria-label="${esc(o.titre)} \u2014 ${texte}">
+           data-niveau="${niveau}" aria-label="${esc(o.titre)} \u2014 ${texte}">
           <div class="carte-entete">
             <span class="carte-titre">${esc(o.titre)}</span>
-            <span class="badge ${cls}" aria-hidden="true">${texte}</span>
+            <span class="badge ${cls}">${texte}</span>
           </div>
           <div class="carte-meta">${metaProfil}${metaDist}${metaLieu}${metaContrat}${metaDate}${metaTH}</div>
           <div class="carte-source">${esc(o.source)}</div>
@@ -275,21 +336,20 @@ function afficher() {
 
 // ── Chargement des offres ──────────────────────────────────────────────────────
 async function chargerOffres(forceRefresh = false) {
-  const errDiv  = document.getElementById('erreurs');
-  const majEl   = document.getElementById('derniere-maj');
+  const errDiv = document.getElementById('erreurs');
+  const majEl  = document.getElementById('derniere-maj');
 
-  errDiv.hidden  = true;
+  errDiv.hidden = true;
   document.getElementById('liste-offres').innerHTML = '';
   document.getElementById('vide').hidden = true;
 
-  // Cache sessionStorage (valide 5 min)
   if (!forceRefresh) {
     try {
-      const cached = sessionStorage.getItem(CLE_CACHE);
+      const cached     = sessionStorage.getItem(CLE_CACHE);
       const cachedDate = sessionStorage.getItem(CLE_DATE);
       if (cached && cachedDate && Date.now() - Number(cachedDate) < 5 * 60_000) {
         toutesOffres = JSON.parse(cached);
-        majEl.textContent = `Actualis\u00e9 il y a moins de 5 min`;
+        majEl.textContent = `Actualis\u00e9 il y a moins de 5\u00a0min`;
         afficher();
         return;
       }
@@ -298,21 +358,16 @@ async function chargerOffres(forceRefresh = false) {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
-
-    const res = await fetch('/api/offres', { signal: controller.signal });
+    const timeout    = setTimeout(() => controller.abort(), 15000);
+    const res        = await fetch('/api/offres', { signal: controller.signal });
     clearTimeout(timeout);
-
     if (!res.ok) throw new Error(`Erreur serveur ${res.status}`);
     const data = await res.json();
-
     toutesOffres = data.offres || [];
     sessionStorage.setItem(CLE_CACHE, JSON.stringify(toutesOffres));
     sessionStorage.setItem(CLE_DATE, String(Date.now()));
-
     const now = new Date();
     majEl.textContent = `Mis \u00e0 jour \u00e0 ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
-
     if (data.errors?.length) {
       errDiv.hidden = false;
       errDiv.textContent = 'Avertissement\u00a0: ' + data.errors.join(' \u2014 ');
@@ -334,4 +389,5 @@ async function chargerOffres(forceRefresh = false) {
 }
 
 // ── Lancement ──────────────────────────────────────────────────────────────────
+chargerProfil();
 chargerOffres();
