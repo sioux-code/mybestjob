@@ -71,6 +71,7 @@
 
 /* ── Reset minimal ───────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+header, nav, section, main, div { max-width: 100%; }
 
 /* Garantit que hidden l'emporte sur display:flex/grid */
 [hidden] { display: none !important; }
@@ -80,6 +81,7 @@ html {
   font-size: 18px;
   scroll-behavior: smooth;
   background: var(--fond);
+  overflow-x: hidden;
 }
 
 body {
@@ -87,8 +89,10 @@ body {
   line-height: 1.7;
   background: var(--fond);
   color: var(--texte);
+  width: 100%;
   max-width: 820px;
   margin: 0 auto;
+  overflow-x: hidden;
   padding-bottom: 6rem;
   text-align: left;
   -webkit-font-smoothing: antialiased;
