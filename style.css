@@ -829,109 +829,169 @@ html.profil-autisme .carte[data-niveau="non"]   { border-left-color: #584050; }
 html.profil-autisme .fab { background: #3A5070; }
 html.profil-autisme .fab:hover { background: #486080; }
 
-/* ── TDAH : info essentielle en avant, secondaire estompée ───────────────── */
-html.profil-tdah .carte { border-left-width: 6px; }
-
-html.profil-tdah .carte-titre {
-  font-size: 1.05rem;
-  font-weight: 700;
-}
-
-html.profil-tdah .badge { font-size: .85rem; padding: .25rem .7rem; }
-
-html.profil-tdah .carte-source { display: none; } /* supprime le bruit */
-
-html.profil-tdah .meta-tag--dist,
-html.profil-tdah .meta-tag--profil { font-size: .85rem; font-weight: 700; }
-
-html.profil-tdah .carte-meta .meta-tag:not(.meta-tag--dist):not(.meta-tag--profil):not(.meta-tag--th) {
-  opacity: .55; /* estompe lieu/contrat/date */
-}
-
+/* ── TDAH : dark pastel ambre/orangé — énergie douce, hiérarchie forte ───── */
+html.profil-tdah body      { background: #2C2818; color: #E0D4B8; }
+html.profil-tdah header    { background: #221F12; border-bottom-color: #4A4020; box-shadow: none; }
+html.profil-tdah header::before { background: linear-gradient(90deg, #7A5A20, #C07830, #8A5040); }
+html.profil-tdah h1        { color: #E0D4B8; }
+html.profil-tdah h1 strong { color: #D4A060; }
+html.profil-tdah .subtitle { color: #907850; }
+html.profil-tdah .btn-profil-header { background: #3A3018; border-color: #7A5A20; color: #D4A060; }
+html.profil-tdah .profiles-bar { background: #221F12; border-color: #4A4020; }
+html.profil-tdah .filters      { background: #272410; border-color: #4A4020; }
+html.profil-tdah .filter-label { color: #907850; }
+html.profil-tdah .toggle-label-text { color: #D0C8A8; }
+html.profil-tdah .info-bar     { color: #907850; }
+html.profil-tdah .pill         { background: #2C2818; border-color: #4A4020; color: #D0C8A8; }
+html.profil-tdah .pill:hover   { border-color: #7A5A20; color: #D4A060; }
+html.profil-tdah .pill.active  { background: #4A3818; border-color: #7A5A20; color: #F0C870; }
+html.profil-tdah select        { background: #221F12; border-color: #4A4020; color: #D0C8A8; }
+html.profil-tdah .carte        { background: #332E1C; border-color: #4A4020; box-shadow: none; border-left-width: 6px; padding: .8rem 1rem; }
+html.profil-tdah .carte:hover  { box-shadow: 0 0 0 2px #7A5A20; transform: none; }
+html.profil-tdah .carte-titre  { color: #E8D8B0; font-size: 1.05rem; font-weight: 700; }
+html.profil-tdah .carte-source { display: none; }
+html.profil-tdah .meta-tag     { background: #3A3420; border-color: #5A5028; color: #B8A880; }
+html.profil-tdah .meta-tag--profil { background: #2A3A20; border-color: #486028; color: #90C060; font-weight: 700; }
+html.profil-tdah .meta-tag--dist   { background: #2A3040; border-color: #485878; color: #80A0C0; font-weight: 700; }
+html.profil-tdah .meta-tag--th     { background: #282A40; border-color: #404868; color: #8090C0; }
+html.profil-tdah .carte-meta .meta-tag:not(.meta-tag--dist):not(.meta-tag--profil):not(.meta-tag--th) { opacity: .45; }
 html.profil-tdah #liste-offres { gap: .5rem; }
+html.profil-tdah .badge        { font-size: .85rem; padding: .25rem .7rem; }
+html.profil-tdah .badge-haut   { background: #2A4820; color: #90D060; border-color: #406830; }
+html.profil-tdah .badge-mid    { background: #3A3020; color: #D4A040; border-color: #6A5828; }
+html.profil-tdah .badge-low    { background: #382820; color: #C09070; border-color: #604030; }
+html.profil-tdah .badge-non    { background: #2A2220; color: #907870; border-color: #504038; }
+html.profil-tdah .carte[data-niveau="haut"]  { border-left-color: #406830; }
+html.profil-tdah .carte[data-niveau="mid"]   { border-left-color: #6A5828; }
+html.profil-tdah .carte[data-niveau="low"]   { border-left-color: #604030; }
+html.profil-tdah .carte[data-niveau="non"]   { border-left-color: #504038; }
+html.profil-tdah .fab { background: #4A3818; }
+html.profil-tdah .fab:hover { background: #5A4820; }
 
-html.profil-tdah .carte { padding: .7rem 1rem; }
-
-/* ── Malvoyant : contraste maximal + taille pilotée par slider ───────────── */
-html.profil-malvoyant body  { background: #fff; color: #000; }
-
-html.profil-malvoyant header {
-  background: #fff;
-  border-bottom: 3px solid #000;
-  box-shadow: none;
-}
-html.profil-malvoyant header::before { height: 6px; }
-
+/* ── Malvoyant : dark haute densité + taille pilotée par slider ─────────── */
+/* Fond très sombre, texte très clair, contraste maximal conservé */
+html.profil-malvoyant body  { background: #101418; color: #F0EDE8; }
+html.profil-malvoyant header { background: #0A0C10; border-bottom: 3px solid #F0EDE8; box-shadow: none; }
+html.profil-malvoyant header::before { height: 6px; background: linear-gradient(90deg, #4080FF, #C0C0FF, #FF8040); }
+html.profil-malvoyant h1        { color: #F0EDE8; }
+html.profil-malvoyant h1 strong { color: #80B8FF; }
+html.profil-malvoyant .subtitle { color: #A0A8B8; }
+html.profil-malvoyant .btn-profil-header { background: #202830; border-color: #4080FF; color: #80B8FF; }
 html.profil-malvoyant .profiles-bar,
-html.profil-malvoyant .filters { background: #f0f0f0; border-color: #000; }
-
+html.profil-malvoyant .filters { background: #0C1018; border-color: #F0EDE8; }
+html.profil-malvoyant .filter-label { color: #A0A8B8; }
+html.profil-malvoyant .toggle-label-text { color: #E0DDD8; }
+html.profil-malvoyant .info-bar { color: #C0C8D8; }
+html.profil-malvoyant .pill         { background: #101418; border-color: #404858; color: #D0D8E8; }
+html.profil-malvoyant .pill:hover   { border-color: #F0EDE8; color: #F0EDE8; }
+html.profil-malvoyant .pill.active  { background: #1A2A50; border-color: #4080FF; color: #80B8FF; }
+html.profil-malvoyant select        { background: #0C1018; border-color: #404858; color: #D0D8E8; }
 html.profil-malvoyant .carte {
-  background: #fff;
-  border: 2px solid #000;
+  background: #181C24;
+  border: 2px solid #404858;
   border-left-width: 8px;
   box-shadow: none;
   border-radius: 4px;
 }
 html.profil-malvoyant .carte:hover,
-html.profil-malvoyant .carte:focus-visible { transform: none; box-shadow: 0 0 0 4px #000; }
+html.profil-malvoyant .carte:focus-visible { transform: none; box-shadow: 0 0 0 4px #4080FF; }
+html.profil-malvoyant .carte-titre { font-weight: 700; color: #F0EDE8; }
+html.profil-malvoyant .carte-source { color: #6080A0; opacity: 1; }
+html.profil-malvoyant .meta-tag { background: #202830; border-color: #404858; color: #C0D0E0; }
+html.profil-malvoyant .badge-haut { background: #103060; color: #80C8FF; border-color: #2060C0; }
+html.profil-malvoyant .badge-mid  { background: #103828; color: #60D8A0; border-color: #206848; }
+html.profil-malvoyant .badge-low  { background: #382808; color: #F0C040; border-color: #705010; }
+html.profil-malvoyant .badge-non  { background: #281818; color: #C08080; border-color: #603030; }
+html.profil-malvoyant .carte[data-niveau="haut"]  { border-left-color: #2060C0; }
+html.profil-malvoyant .carte[data-niveau="mid"]   { border-left-color: #206848; }
+html.profil-malvoyant .carte[data-niveau="low"]   { border-left-color: #705010; }
+html.profil-malvoyant .carte[data-niveau="non"]   { border-left-color: #603030; }
+html.profil-malvoyant .fab { background: #1A2A50; width: 60px; height: 60px; }
+html.profil-malvoyant :focus-visible { outline: 4px solid #4080FF; outline-offset: 4px; }
 
-html.profil-malvoyant .carte-titre { font-weight: 700; color: #000; }
-
-html.profil-malvoyant .badge-haut { background: #00008B; color: #fff; border-color: #00008B; }
-html.profil-malvoyant .badge-mid  { background: #005500; color: #fff; border-color: #005500; }
-html.profil-malvoyant .badge-low  { background: #7A3B00; color: #fff; border-color: #7A3B00; }
-html.profil-malvoyant .badge-non  { background: #333;    color: #fff; border-color: #333;    }
-
-html.profil-malvoyant .meta-tag { background: #eee; border-color: #555; color: #000; }
-html.profil-malvoyant .carte-source { color: #333; opacity: 1; }
-html.profil-malvoyant .info-bar { color: #333; }
-
-html.profil-malvoyant .pill.active { background: #00008B; border-color: #00008B; }
-html.profil-malvoyant .pill:hover  { border-color: #000; color: #000; }
-
-html.profil-malvoyant .fab { background: #000; width: 60px; height: 60px; }
-html.profil-malvoyant :focus-visible { outline: 4px solid #000; outline-offset: 4px; }
-
-/* ── Dyslexie+ : OpenDyslexic + espacement maximal ───────────────────────── */
+/* ── Dyslexie+ : dark pastel chaud + OpenDyslexic ───────────────────────── */
 html.profil-dyslexie body {
   font-family: 'OpenDyslexic', 'Lexend', system-ui, sans-serif;
+  background: #28201A;
+  color: #E8DDD0;
   line-height: 2.1;
   word-spacing: .15em;
   letter-spacing: .04em;
   font-size: 19px;
 }
+html.profil-dyslexie header    { background: #1E1812; border-bottom-color: #483828; box-shadow: none; }
+html.profil-dyslexie header::before { background: linear-gradient(90deg, #604028, #907040, #A05838); }
+html.profil-dyslexie h1        { color: #E8DDD0; }
+html.profil-dyslexie h1 strong { color: #C89868; }
+html.profil-dyslexie .subtitle { color: #907060; }
+html.profil-dyslexie .btn-profil-header { background: #382A20; border-color: #604028; color: #C89868; }
+html.profil-dyslexie .profiles-bar { background: #1E1812; border-color: #483828; }
+html.profil-dyslexie .filters      { background: #221C16; border-color: #483828; gap: 1.5rem; }
+html.profil-dyslexie .filter-label { color: #907060; }
+html.profil-dyslexie .toggle-label-text { color: #D8CEC0; }
+html.profil-dyslexie .info-bar     { color: #907060; }
+html.profil-dyslexie .pill         { background: #28201A; border-color: #483828; color: #D8CEC0; }
+html.profil-dyslexie .pill:hover   { border-color: #907060; color: #C89868; }
+html.profil-dyslexie .pill.active  { background: #483028; border-color: #907060; color: #F0C890; }
+html.profil-dyslexie select        { background: #1E1812; border-color: #483828; color: #D8CEC0; }
+html.profil-dyslexie .carte        { background: #302620; border-color: #483828; box-shadow: none; padding: 1.1rem 1.3rem; }
+html.profil-dyslexie .carte:hover  { box-shadow: 0 0 0 2px #907060; transform: none; }
+html.profil-dyslexie .carte-titre  { color: #EDE0D0; line-height: 1.7; }
+html.profil-dyslexie .carte-source { color: #706050; opacity: 1; }
+html.profil-dyslexie .meta-tag     { background: #382C24; border-color: #584838; color: #C0A888; padding: .15rem .55rem; }
+html.profil-dyslexie .meta-tag--profil { background: #2A3820; border-color: #486030; color: #90C070; }
+html.profil-dyslexie .meta-tag--dist   { background: #20303A; border-color: #385868; color: #70A0C0; }
+html.profil-dyslexie .carte-entete  { flex-direction: column; align-items: flex-start; gap: .4rem; }
+html.profil-dyslexie .carte-meta    { gap: .5rem; margin-top: .4rem; }
+html.profil-dyslexie #liste-offres  { gap: 1rem; }
+html.profil-dyslexie .badge-haut { background: #2A4030; color: #90C890; border-color: #406050; }
+html.profil-dyslexie .badge-mid  { background: #302840; color: #A898C8; border-color: #504870; }
+html.profil-dyslexie .badge-low  { background: #3A3020; color: #C8A860; border-color: #685030; }
+html.profil-dyslexie .badge-non  { background: #2C2020; color: #A88080; border-color: #503838; }
+html.profil-dyslexie .carte[data-niveau="haut"]  { border-left-color: #406050; }
+html.profil-dyslexie .carte[data-niveau="mid"]   { border-left-color: #504870; }
+html.profil-dyslexie .carte[data-niveau="low"]   { border-left-color: #685030; }
+html.profil-dyslexie .carte[data-niveau="non"]   { border-left-color: #503838; }
+html.profil-dyslexie .fab { background: #483028; }
 
-html.profil-dyslexie .carte { padding: 1.1rem 1.3rem; }
-
-html.profil-dyslexie .carte-entete {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: .4rem;
-}
-
-html.profil-dyslexie .carte-titre { line-height: 1.7; }
-html.profil-dyslexie .carte-meta  { gap: .5rem; margin-top: .4rem; }
-html.profil-dyslexie .meta-tag    { padding: .15rem .55rem; }
-html.profil-dyslexie #liste-offres { gap: 1rem; }
-html.profil-dyslexie .filters { gap: 1.5rem; }
-
-/* ── Daltonien : palette bleue/orange, zéro rouge/vert ambigu ────────────── */
-html.profil-daltonien .badge-haut { background: #1E3A5F; color: #fff; border-color: #1E3A5F; }
-html.profil-daltonien .badge-mid  { background: #D97706; color: #fff; border-color: #D97706; }
-html.profil-daltonien .badge-low  { background: #64748B; color: #fff; border-color: #64748B; }
-html.profil-daltonien .badge-non  { background: #374151; color: #fff; border-color: #374151; }
-
-html.profil-daltonien .carte[data-niveau="haut"]  { border-left-color: #1E3A5F; }
-html.profil-daltonien .carte[data-niveau="mid"]   { border-left-color: #D97706; }
-html.profil-daltonien .carte[data-niveau="low"]   { border-left-color: #64748B; }
-html.profil-daltonien .carte[data-niveau="non"]   { border-left-color: #374151; }
-
-html.profil-daltonien .meta-tag--profil    { background: #FEF3C7; border-color: #D97706; color: #7C2D12; }
-html.profil-daltonien .meta-tag--hors-profil { background: #E0E7FF; border-color: #3730A3; color: #1e1b4b; }
-
-html.profil-daltonien .pill.active { background: #1E3A5F; border-color: #1E3A5F; }
-html.profil-daltonien .toggle-track { background: #64748B; }
-html.profil-daltonien input:checked ~ .toggle-track { background: #1E3A5F; }
+/* ── Daltonien : dark pastel bleu/ambre, zéro rouge/vert ambigu ──────────── */
+html.profil-daltonien body     { background: #1C2030; color: #D0D8E8; }
+html.profil-daltonien header   { background: #141828; border-bottom-color: #303850; box-shadow: none; }
+html.profil-daltonien header::before { background: linear-gradient(90deg, #284880, #5060A0, #A07030); }
+html.profil-daltonien h1        { color: #D0D8E8; }
+html.profil-daltonien h1 strong { color: #80A8E0; }
+html.profil-daltonien .subtitle { color: #6878A0; }
+html.profil-daltonien .btn-profil-header { background: #283048; border-color: #405880; color: #80A8E0; }
+html.profil-daltonien .profiles-bar { background: #141828; border-color: #303850; }
+html.profil-daltonien .filters      { background: #181C2C; border-color: #303850; }
+html.profil-daltonien .filter-label { color: #6878A0; }
+html.profil-daltonien .toggle-label-text { color: #C8D0E0; }
+html.profil-daltonien .info-bar     { color: #6878A0; }
+html.profil-daltonien .pill         { background: #1C2030; border-color: #303850; color: #C8D0E0; }
+html.profil-daltonien .pill:hover   { border-color: #405880; color: #80A8E0; }
+html.profil-daltonien .pill.active  { background: #284880; border-color: #405880; color: #A8C8F0; }
+html.profil-daltonien select        { background: #141828; border-color: #303850; color: #C8D0E0; }
+html.profil-daltonien .carte        { background: #222840; border-color: #303850; box-shadow: none; }
+html.profil-daltonien .carte:hover  { box-shadow: 0 0 0 2px #405880; transform: none; }
+html.profil-daltonien .carte-titre  { color: #D8E0F0; }
+html.profil-daltonien .carte-source { color: #505870; opacity: 1; }
+html.profil-daltonien .meta-tag     { background: #283048; border-color: #384868; color: #A0B0D0; }
+html.profil-daltonien .meta-tag--profil      { background: #2A3828; border-color: #486040; color: #90B880; }
+html.profil-daltonien .meta-tag--hors-profil { background: #3A2818; border-color: #685030; color: #C0A060; }
+html.profil-daltonien .meta-tag--dist        { background: #203040; border-color: #385870; color: #6898C0; }
+/* Niveaux : bleu vif / ambre / gris bleuté / gris foncé (safe daltonien) */
+html.profil-daltonien .badge-haut { background: #1A3870; color: #80B8F0; border-color: #2858C0; }
+html.profil-daltonien .badge-mid  { background: #3A2E08; color: #E0B040; border-color: #706010; }
+html.profil-daltonien .badge-low  { background: #282E40; color: #9098C0; border-color: #404860; }
+html.profil-daltonien .badge-non  { background: #202028; color: #707088; border-color: #383848; }
+html.profil-daltonien .carte[data-niveau="haut"]  { border-left-color: #2858C0; }
+html.profil-daltonien .carte[data-niveau="mid"]   { border-left-color: #706010; }
+html.profil-daltonien .carte[data-niveau="low"]   { border-left-color: #404860; }
+html.profil-daltonien .carte[data-niveau="non"]   { border-left-color: #383848; }
+html.profil-daltonien .toggle-track { background: #404860; }
+html.profil-daltonien input:checked ~ .toggle-track { background: #2858C0; }
+html.profil-daltonien .fab { background: #284880; }
+html.profil-daltonien .fab:hover { background: #305898; }
 
 /* ── Anxiété / stress : dark pastel — foncé reposant, couleurs douces ────── */
 html.profil-anxiete body      { background: #2A2D35; color: #D4CFC8; }
@@ -980,33 +1040,45 @@ html.profil-anxiete .etat-erreur { display: none; }
 html.profil-anxiete .fab         { background: #3D4A60; }
 html.profil-anxiete .fab:hover   { background: #4A5A70; }
 
-/* ── Motricité réduite : grandes zones de clic, pas de hover fin ─────────── */
-html.profil-motricite .carte {
-  padding: 1.2rem 1.4rem;
-  min-height: 80px;
-}
-
+/* ── Motricité réduite : dark pastel neutre + grandes zones de clic ─────── */
+html.profil-motricite body     { background: #202428; color: #CDD2D8; }
+html.profil-motricite header   { background: #181C20; border-bottom-color: #363C44; box-shadow: none; }
+html.profil-motricite header::before { background: linear-gradient(90deg, #405870, #507090, #608880); }
+html.profil-motricite h1        { color: #CDD2D8; }
+html.profil-motricite h1 strong { color: #80A8C8; }
+html.profil-motricite .subtitle { color: #6A7888; }
+html.profil-motricite .btn-profil-header { background: #2C3440; border-color: #507090; color: #80A8C8; min-height: 44px; }
+html.profil-motricite .profiles-bar { background: #181C20; border-color: #363C44; }
+html.profil-motricite .filters      { background: #1C2024; border-color: #363C44; }
+html.profil-motricite .filter-label { color: #6A7888; }
+html.profil-motricite .toggle-label-text { color: #C0C8D0; }
+html.profil-motricite .info-bar     { color: #6A7888; }
+html.profil-motricite select        { background: #181C20; border-color: #363C44; color: #C0C8D0; min-height: 44px; font-size: 1rem; padding: .5rem .8rem; }
+html.profil-motricite .carte        { background: #282E34; border-color: #363C44; box-shadow: none; padding: 1.2rem 1.4rem; min-height: 80px; }
 html.profil-motricite .carte:hover,
-html.profil-motricite .carte:focus-visible {
-  transform: none;
-  box-shadow: 0 0 0 4px var(--bleu);
-}
-
-html.profil-motricite .pill {
-  padding: .5rem 1.1rem;
-  font-size: .9rem;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-}
-
-html.profil-motricite select {
-  min-height: 44px;
-  font-size: 1rem;
-  padding: .5rem .8rem;
-}
-
+html.profil-motricite .carte:focus-visible { transform: none; box-shadow: 0 0 0 4px #507090; }
+html.profil-motricite .carte-titre  { color: #CDD2D8; }
+html.profil-motricite .carte-source { color: #5A6878; opacity: 1; }
+html.profil-motricite .meta-tag     { background: #303840; border-color: #404C58; color: #A0B0C0; }
+html.profil-motricite .meta-tag--profil { background: #283830; border-color: #406050; color: #80B898; }
+html.profil-motricite .meta-tag--dist   { background: #202E40; border-color: #385068; color: #6090B8; }
+html.profil-motricite .badge-haut { background: #1E3848; color: #70B0D8; border-color: #305878; }
+html.profil-motricite .badge-mid  { background: #1E3828; color: #68B880; border-color: #305840; }
+html.profil-motricite .badge-low  { background: #382E18; color: #C0A850; border-color: #605020; }
+html.profil-motricite .badge-non  { background: #282828; color: #888888; border-color: #404040; }
+html.profil-motricite .carte[data-niveau="haut"]  { border-left-color: #305878; }
+html.profil-motricite .carte[data-niveau="mid"]   { border-left-color: #305840; }
+html.profil-motricite .carte[data-niveau="low"]   { border-left-color: #605020; }
+html.profil-motricite .carte[data-niveau="non"]   { border-left-color: #404040; }
+html.profil-motricite .fab { background: #2C3A50; width: 64px; height: 64px; bottom: 2rem; right: 1.5rem; }
+html.profil-motricite .fab:hover { background: #384858; }
+html.profil-motricite :focus-visible { outline: 4px solid #507090; outline-offset: 4px; }
 html.profil-motricite .toggle-switch { min-height: 44px; }
+html.profil-motricite .pill { background: #202428; border-color: #363C44; color: #C0C8D0; padding: .5rem 1.1rem; font-size: .9rem; min-height: 44px; display: flex; align-items: center; }
+html.profil-motricite .pill:hover  { border-color: #507090; color: #80A8C8; }
+html.profil-motricite .pill.active { background: #2C3A50; border-color: #507090; color: #A0C8E8; }
+html.profil-motricite .btn-geo { min-height: 44px; padding: .5rem 1rem; background: #202428; border-color: #363C44; color: #C0C8D0; }
+html.profil-motricite .btn-geo--active { background: #2C3A50; border-color: #507090; color: #A0C8E8; }
 
 html.profil-motricite .toggle-track {
   width: 3.2rem;
