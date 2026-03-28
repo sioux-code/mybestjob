@@ -71,7 +71,6 @@
 
 /* ── Reset minimal ───────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-header, nav, section, main, div { max-width: 100%; }
 
 /* Garantit que hidden l'emporte sur display:flex/grid */
 [hidden] { display: none !important; }
@@ -81,7 +80,6 @@ html {
   font-size: 18px;
   scroll-behavior: smooth;
   background: var(--fond);
-  overflow-x: hidden;
 }
 
 body {
@@ -92,7 +90,6 @@ body {
   width: 100%;
   max-width: 820px;
   margin: 0 auto;
-  overflow-x: hidden;
   padding-bottom: 6rem;
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -529,11 +526,17 @@ select:focus { outline: 3px solid var(--bleu); }
   display: flex;
   flex-direction: column;
   gap: .4rem;
+  width: 100%;
+}
+
+#liste-offres li {
+  width: 100%;
 }
 
 /* ── Carte ───────────────────────────────────────────────────────────────── */
 .carte {
   display: block;
+  width: 100%;
   background: var(--carte-fond);
   border-left: 5px solid var(--bleu);
   border-bottom: 1px solid var(--bordure);
