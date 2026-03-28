@@ -432,6 +432,19 @@ h1 strong {
   font-weight: 600;
 }
 
+/* Pills compatibilité — couleurs identiques aux badges des cartes */
+[data-filter="score"][data-score="0"]  { border-color: var(--c-non-brd); color: var(--c-non-fg); }
+[data-filter="score"][data-score="0"]:hover,
+[data-filter="score"][data-score="0"].active  { background: var(--c-non-bg);  border-color: var(--c-non-brd); color: var(--c-non-fg);  }
+
+[data-filter="score"][data-score="6"]  { border-color: var(--c-mid-brd); color: var(--c-mid-fg); }
+[data-filter="score"][data-score="6"]:hover,
+[data-filter="score"][data-score="6"].active  { background: var(--c-mid-bg);  border-color: var(--c-mid-brd); color: var(--c-mid-fg);  font-weight: 600; }
+
+[data-filter="score"][data-score="8"]  { border-color: var(--c-haut-brd); color: var(--c-haut-fg); }
+[data-filter="score"][data-score="8"]:hover,
+[data-filter="score"][data-score="8"].active  { background: var(--c-haut-bg); border-color: var(--c-haut-brd); color: var(--c-haut-fg); font-weight: 600; }
+
 /* Pilules de profil : style légèrement différent */
 .pill--profile {
   border-radius: 6px;
