@@ -95,7 +95,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-p, li { max-width: 65ch; }
+p { max-width: 65ch; }
 
 /* ── Lien d'évitement ────────────────────────────────────────────────────── */
 .skip-link {
