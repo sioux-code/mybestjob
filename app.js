@@ -9,6 +9,7 @@ let scoreMin      = 8;
 let filtreContrat = '';
 let filtreSource  = '';
 let filtreTH      = false;
+let filtreProfil  = false;
 let userLat       = null;
 let userLng       = null;
 let filtreDistance = 50; // km
@@ -59,6 +60,13 @@ document.getElementById('filtre-contrat').addEventListener('change', e => {
 // ── Filtres — source ───────────────────────────────────────────────────────────
 document.getElementById('filtre-source').addEventListener('change', e => {
   filtreSource = e.target.value;
+  afficher();
+});
+
+// ── Filtres — profil perso ────────────────────────────────────────────────────
+document.getElementById('filtre-profil').addEventListener('change', e => {
+  filtreProfil = e.target.checked;
+  e.target.setAttribute('aria-checked', String(e.target.checked));
   afficher();
 });
 
@@ -138,6 +146,48 @@ document.getElementById('btn-actualiser').addEventListener('click', () => {
   chargerOffres(true);
 });
 
+// ── Score profil (sans bac, 50 ans, femme) ────────────────────────────────────
+const NIVEAUX_OK   = ['', 'Aucune formation scolaire', 'CAP, BEP et équivalents'];
+const NIVEAUX_BAC  = ['Bac ou équivalent'];
+const NIVEAUX_SUP  = ['Bac+2 ou équivalents', 'Bac+3, Bac+4 ou équivalents'];
+
+// Mots-clés valorisés pour profil senior/femme sans diplôme
+const PROFIL_POSITIF = [
+  /expérience|expérimenté/i, /senior/i, /autonome/i,
+  /sans diplôme|sans qualification/i, /débutant accepté/i,
+  /aide.soignant/i, /auxiliaire/i, /agent de service/i,
+  /nettoyage|ménage|entretien/i, /lingerie/i,
+  /caissier|caissière/i, /vendeur|vendeuse/i,
+  /préparatrice|préparateur/i, /assistante|assistant/i,
+  /secrétaire/i, /agent administratif/i,
+  /aide.cuisine|plonge/i, /agent.*restauration/i,
+];
+
+const PROFIL_NEGATIF = [
+  /bac\+[23456]/i, /master|doctorat|ingénieur/i,
+  /cadre supérieur/i, /directeur/i, /chef de projet/i,
+  /jeune diplômé/i, /junior/i, /permis (b|c|d|e) obligatoire/i,
+];
+
+function scoreProfilPerso(o) {
+  const texte = `${o.titre} ${o.niveauFormation || ''} ${o.experience || ''} ${o.qualification || ''}`;
+  let s = 5;
+
+  // Niveau de formation
+  if (NIVEAUX_OK.includes(o.niveauFormation))  s += 2;
+  if (NIVEAUX_BAC.includes(o.niveauFormation)) s += 0;
+  if (NIVEAUX_SUP.includes(o.niveauFormation)) s -= 3;
+
+  // Expérience : débutant = bon signe
+  if (/débutant accepté/i.test(o.experience || '')) s += 1;
+
+  // Mots-clés positifs / négatifs
+  for (const p of PROFIL_POSITIF) if (p.test(texte)) s++;
+  for (const p of PROFIL_NEGATIF) if (p.test(texte)) s--;
+
+  return Math.max(0, Math.min(10, s));
+}
+
 // ── Score → métadonnées visuelles ─────────────────────────────────────────────
 function niveauScore(score) {
   if (score >= 8) return 'haut';
@@ -172,6 +222,7 @@ function afficher() {
   if (filtreContrat) filtrées = filtrées.filter(o => o.contrat.toLowerCase().includes(filtreContrat.toLowerCase()));
   if (filtreSource)  filtrées = filtrées.filter(o => o.source === filtreSource);
   if (filtreTH)      filtrées = filtrées.filter(o => o.th === true);
+  if (filtreProfil)  filtrées = filtrées.filter(o => scoreProfilPerso(o) >= 7);
   if (userLat !== null) {
     filtrées = filtrées.filter(o => {
       if (o.lat == null || o.lng == null) return true; // garde si pas de coords
@@ -196,6 +247,12 @@ function afficher() {
     const metaContrat = o.contrat ? `<span class="meta-tag">Contrat\u00a0: ${esc(o.contrat)}</span>` : '';
     const metaDate    = o.date    ? `<span class="meta-tag">Date\u00a0: ${esc(o.date)}</span>`       : '';
     const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th" title="Poste accessible aux travailleurs handicap\u00e9s">\u267F TH</span>` : '';
+    const profil = scoreProfilPerso(o);
+    const metaProfil  = profil >= 7
+      ? `<span class="meta-tag meta-tag--profil" title="Accessible sans bac, exp\u00e9rience valoris\u00e9e">\u2665 Pour moi</span>`
+      : profil <= 3
+      ? `<span class="meta-tag meta-tag--hors-profil" title="Probablement hors profil (bac+ requis ou cadre)">\u26A0 Hors profil</span>`
+      : '';
     const dist = (userLat !== null && o.lat != null && o.lng != null)
       ? Math.round(haversineKm(userLat, userLng, o.lat, o.lng))
       : null;
@@ -209,7 +266,7 @@ function afficher() {
             <span class="carte-titre">${esc(o.titre)}</span>
             <span class="badge ${cls}" aria-hidden="true">${texte}</span>
           </div>
-          <div class="carte-meta">${metaDist}${metaLieu}${metaContrat}${metaDate}${metaTH}</div>
+          <div class="carte-meta">${metaProfil}${metaDist}${metaLieu}${metaContrat}${metaDate}${metaTH}</div>
           <div class="carte-source">${esc(o.source)}</div>
         </a>
       </li>`;

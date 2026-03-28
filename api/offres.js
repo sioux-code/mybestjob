@@ -68,13 +68,16 @@ async function fetchFTAvecParams(token, params, isTHQuery = false) {
   if (!res.ok) throw new Error(`FT API ${res.status}`);
   const data = await res.json();
   return (data.resultats || []).map(item => ({
-    source:  'France Travail',
-    titre:   item.intitule || '',
-    lieu:    item.lieuTravail?.libelle || '',
-    lat:     item.lieuTravail?.latitude  ?? null,
-    lng:     item.lieuTravail?.longitude ?? null,
-    contrat: item.typeContratLibelle || '',
-    date:    item.dateCreation?.slice(0, 10) || '',
+    source:     'France Travail',
+    titre:      item.intitule || '',
+    lieu:       item.lieuTravail?.libelle || '',
+    lat:        item.lieuTravail?.latitude  ?? null,
+    lng:        item.lieuTravail?.longitude ?? null,
+    contrat:    item.typeContratLibelle || '',
+    date:       item.dateCreation?.slice(0, 10) || '',
+    niveauFormation: item.formations?.[0]?.niveauLibelle || '',
+    experience:      item.experienceLibelle || '',
+    qualification:   item.qualificationLibelle || '',
     url:     item.origineOffre?.urlOrigine ||
              `https://candidat.francetravail.fr/offres/recherche/detail/${item.id}`,
     score:   scoreAsperger(`${item.intitule} ${item.description || ''}`),

@@ -470,6 +470,20 @@ select:focus { outline: 3px solid var(--bleu); }
   font-weight: 600;
 }
 
+.meta-tag--profil {
+  background: #F0FDF4;
+  border-color: #16A34A;
+  color: #15803D;
+  font-weight: 700;
+}
+
+.meta-tag--hors-profil {
+  background: #FFF7ED;
+  border-color: #EA580C;
+  color: #C2410C;
+  font-weight: 600;
+}
+
 .meta-tag--th {
   background: var(--c-mid-bg);
   border-color: var(--c-mid-brd);
