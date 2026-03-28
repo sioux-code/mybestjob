@@ -1,4 +1,4 @@
-const CACHE_NOM = 'mybestjob-v3';
+const CACHE_NOM = 'mybestjob-v4';
 const STATIQUES = ['/', '/index.html', '/style.css', '/app.js', '/manifest.json', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', e => {
