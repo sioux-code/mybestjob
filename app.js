@@ -206,9 +206,17 @@ function scoreProfilPerso(o) {
   const texte = `${o.titre} ${o.niveauFormation || ''} ${o.experience || ''} ${o.qualification || ''}`.toLowerCase();
   let s = 5;
 
-  // Formation : l'offre demande-t-elle plus que ce que j'ai ?
-  const niveauOffre = NIVEAU_FT[o.niveauFormation] ?? 0;
-  const niveauMoi   = FORMATION_NIVEAUX[monProfil.formation] ?? 0;
+  // Formation : niveau requis (champ structuré FT, ou détecté dans le texte)
+  let niveauOffre = NIVEAU_FT[o.niveauFormation] ?? 0;
+  // Si FT n'a pas rempli le champ, on cherche dans le titre/texte
+  if (!o.niveauFormation) {
+    const t = (o.titre || '').toLowerCase();
+    if (/bac\s*\+\s*[456789]|master\b|ingénieur\b|dess\b|dea\b/.test(t))          niveauOffre = 5;
+    else if (/bac\s*\+\s*[23]\b|bts\b|dut\b|iut\b/.test(t))                        niveauOffre = 3;
+    else if (/\bbac\b(?!\s*\+)|brevet\s+pro|b\.p\.\s|diplôme\s+d[''']état/.test(t)) niveauOffre = 2;
+    else if (/\bcap\b|\bbep\b/.test(t))                                              niveauOffre = 1;
+  }
+  const niveauMoi = FORMATION_NIVEAUX[monProfil.formation] ?? 0;
   const ecart = niveauOffre - niveauMoi;
   if      (ecart <= 0) s += 2;  // accessible
   else if (ecart === 1) s -= 1; // légèrement au-dessus
