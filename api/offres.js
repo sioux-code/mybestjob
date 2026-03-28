@@ -1,5 +1,4 @@
 'use strict';
-const cheerio = require('cheerio');
 
 const PROVINS_INSEE = '77379';
 const RAYON_KM = 40;
@@ -123,46 +122,6 @@ async function fetchFranceTravail() {
 }
 
 
-// ── Softy.pro scraping ────────────────────────────────────────────────────────
-
-const SOFTY_SOURCES = [
-  { nom: 'CH Provins', url: 'https://ch-provins.softy.pro/offres' },
-];
-
-async function fetchSofty({ nom, url }) {
-  const res = await fetch(url, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MyJob77/1.0)' },
-  });
-  if (!res.ok) throw new Error(`Softy ${res.status}`);
-  const html = await res.text();
-  const $ = cheerio.load(html);
-  const offres = [];
-  const seen = new Set();
-  const base = url.replace('/offres', '');
-  const CONTRATS = ['CDI', 'CDD', 'Intérim', 'Alternance', 'Stage', 'Vacataire'];
-
-  $('a[href*="/offre/"]').each((_, el) => {
-    const href = $(el).attr('href') || '';
-    if (!href || seen.has(href)) return;
-    seen.add(href);
-    const texte = $(el).text().replace(/\s+/g, ' ').trim();
-    const dateM  = texte.match(/(\d{2}\/\d{2}\/\d{4})/);
-    offres.push({
-      source:  nom,
-      titre:   texte.slice(0, 120),
-      lieu:    'Provins',
-      lat:     48.5599,
-      lng:     3.2994,
-      contrat: CONTRATS.find(c => texte.includes(c)) || '',
-      date:    dateM ? dateM[1] : '',
-      th:      false,
-      url:     base + href,
-      score:   scoreAsperger(texte),
-    });
-  });
-  return offres;
-}
-
 // ── Handler ───────────────────────────────────────────────────────────────────
 
 module.exports = async function handler(req, res) {
@@ -171,7 +130,6 @@ module.exports = async function handler(req, res) {
 
   const results = await Promise.allSettled([
     fetchFranceTravail(),
-    ...SOFTY_SOURCES.map(s => fetchSofty(s)),
   ]);
 
   const offres = [];
