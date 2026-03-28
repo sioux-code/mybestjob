@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyBestJob — Emplois autour de Provins</title>
   <meta name="description" content="Offres d'emploi dans un rayon de 45 min autour de Provins, triées par compatibilité.">
-  <meta name="theme-color" content="#1E3A5F">
+  <meta name="theme-color" content="#ffffff">
 
   <!-- PWA -->
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/icon-192.png">
 
-  <!--
-    Police Lexend : conçue pour améliorer la lisibilité, aide les personnes dyslexiques.
-    Poids 400 (normal) et 600 (semi-gras) uniquement.
-  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&display=swap" rel="stylesheet">
@@ -23,21 +19,33 @@
 </head>
 <body>
 
-  <!-- Lien d'évitement pour clavier / lecteurs d'écran -->
   <a class="skip-link" href="#resultats">Aller aux résultats</a>
 
   <header role="banner">
-    <div class="header-title">
-      <span class="logo" aria-hidden="true">J</span>
-      <div>
-        <h1>MyBest<strong>Job</strong></h1>
-        <p class="subtitle">Emplois · 45 min autour de Provins</p>
+    <div class="header-inner">
+      <div class="header-title">
+        <span class="logo" aria-hidden="true">J</span>
+        <div>
+          <h1>MyBest<strong>Job</strong></h1>
+          <p class="subtitle">45 min autour de Provins</p>
+        </div>
       </div>
+      <button id="install-btn" class="btn-install" hidden aria-label="Installer l'application sur cet appareil">
+        Installer
+      </button>
     </div>
-    <button id="install-btn" class="btn-install" hidden aria-label="Installer l'application sur cet appareil">
-      Installer
-    </button>
   </header>
+
+  <!-- ── Profils d'accessibilité ── -->
+  <nav class="profiles-bar" aria-label="Profil d'accessibilité">
+    <span class="filter-label" id="label-profil">Profil</span>
+    <div class="pill-group" role="radiogroup" aria-labelledby="label-profil">
+      <button class="pill pill--profile active" data-profil="standard"  role="radio" aria-checked="true">Standard</button>
+      <button class="pill pill--profile"        data-profil="autisme"   role="radio" aria-checked="false">Autisme · Asperger</button>
+      <button class="pill pill--profile"        data-profil="malvoyant" role="radio" aria-checked="false">Malvoyant</button>
+      <button class="pill pill--profile"        data-profil="dyslexie"  role="radio" aria-checked="false">Dyslexie+</button>
+    </div>
+  </nav>
 
   <!-- ── Filtres ── -->
   <section class="filters" aria-label="Filtres de recherche">
@@ -45,9 +53,9 @@
     <div class="filter-group">
       <span class="filter-label" id="label-compat">Compatibilité</span>
       <div class="pill-group" role="radiogroup" aria-labelledby="label-compat">
-        <button class="pill"        data-score="0"  role="radio" aria-checked="false">Tout</button>
-        <button class="pill"        data-score="6"  role="radio" aria-checked="false">Compatible</button>
-        <button class="pill active" data-score="8"  role="radio" aria-checked="true">Très compatible</button>
+        <button class="pill"        data-filter="score" data-score="0"  role="radio" aria-checked="false">Tout</button>
+        <button class="pill"        data-filter="score" data-score="6"  role="radio" aria-checked="false">Compatible</button>
+        <button class="pill active" data-filter="score" data-score="8"  role="radio" aria-checked="true">Très compatible</button>
       </div>
     </div>
 
@@ -59,7 +67,26 @@
         <option value="CDD">CDD</option>
         <option value="Intérim">Intérim</option>
         <option value="Alternance">Alternance</option>
+        <option value="Stage">Stage</option>
       </select>
+    </div>
+
+    <div class="filter-group">
+      <label class="filter-label" for="filtre-source">Source</label>
+      <select id="filtre-source">
+        <option value="">Toutes</option>
+        <option value="France Travail">France Travail</option>
+        <option value="CH Provins">CH Provins</option>
+      </select>
+    </div>
+
+    <div class="filter-group filter-group--toggle">
+      <span class="filter-label" id="label-th">Handicap</span>
+      <label class="toggle-switch" for="filtre-th">
+        <input type="checkbox" id="filtre-th" role="switch" aria-checked="false" aria-labelledby="label-th">
+        <span class="toggle-track" aria-hidden="true"></span>
+        <span class="toggle-label-text">Offres TH uniquement</span>
+      </label>
     </div>
 
   </section>
@@ -73,7 +100,7 @@
   <!-- ── Résultats ── -->
   <main id="resultats" role="main">
 
-<ul id="liste-offres" role="list" aria-label="Liste des offres d'emploi"></ul>
+    <ul id="liste-offres" role="list" aria-label="Liste des offres d'emploi"></ul>
 
     <p id="vide" class="etat-vide" hidden role="status">
       Aucune offre ne correspond à ces critères.

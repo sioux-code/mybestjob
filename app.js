@@ -1,12 +1,14 @@
 'use strict';
 
 // ── Constantes ────────────────────────────────────────────────────────────────
-const CLE_CACHE   = 'mybestjob-offres-v1';
+const CLE_CACHE   = 'mybestjob-offres-v2';
 const CLE_DATE    = 'mybestjob-date';
 
 let toutesOffres  = [];
 let scoreMin      = 8;
 let filtreContrat = '';
+let filtreSource  = '';
+let filtreTH      = false;
 let deferredInstall = null;
 
 // ── Service worker ─────────────────────────────────────────────────────────────
@@ -29,10 +31,10 @@ document.getElementById('install-btn').addEventListener('click', async () => {
   deferredInstall = null;
 });
 
-// ── Filtres ────────────────────────────────────────────────────────────────────
-document.querySelectorAll('.pill').forEach(btn => {
+// ── Filtres — compatibilité ────────────────────────────────────────────────────
+document.querySelectorAll('[data-filter="score"]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.pill').forEach(b => {
+    document.querySelectorAll('[data-filter="score"]').forEach(b => {
       b.classList.remove('active');
       b.setAttribute('aria-checked', 'false');
     });
@@ -43,11 +45,44 @@ document.querySelectorAll('.pill').forEach(btn => {
   });
 });
 
+// ── Filtres — contrat ──────────────────────────────────────────────────────────
 document.getElementById('filtre-contrat').addEventListener('change', e => {
   filtreContrat = e.target.value;
   afficher();
 });
 
+// ── Filtres — source ───────────────────────────────────────────────────────────
+document.getElementById('filtre-source').addEventListener('change', e => {
+  filtreSource = e.target.value;
+  afficher();
+});
+
+// ── Filtres — TH ──────────────────────────────────────────────────────────────
+document.getElementById('filtre-th').addEventListener('change', e => {
+  filtreTH = e.target.checked;
+  e.target.setAttribute('aria-checked', String(e.target.checked));
+  afficher();
+});
+
+// ── Profils d'accessibilité ───────────────────────────────────────────────────
+document.querySelectorAll('.pill--profile').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pill--profile').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-checked', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-checked', 'true');
+
+    const profil = btn.dataset.profil;
+    document.documentElement.classList.remove('profil-autisme', 'profil-malvoyant', 'profil-dyslexie');
+    if (profil !== 'standard') {
+      document.documentElement.classList.add(`profil-${profil}`);
+    }
+  });
+});
+
+// ── Actualiser ────────────────────────────────────────────────────────────────
 document.getElementById('btn-actualiser').addEventListener('click', () => {
   chargerOffres(true);
 });
@@ -60,10 +95,6 @@ function niveauScore(score) {
   return 'non';
 }
 
-/*
-  Triple codage pour daltoniens :
-  ① Forme/symbole  ② Couleur de classe CSS  ③ Texte explicite
-*/
 function badgeScore(score) {
   if (score >= 8) return { cls: 'badge-haut', texte: '\u25A0\u25A0\u25A0 Tr\u00e8s compatible' };
   if (score >= 6) return { cls: 'badge-mid',  texte: '\u25B2\u25B2\u25B3 Compatible'       };
@@ -82,13 +113,14 @@ function esc(str) {
 
 // ── Rendu ──────────────────────────────────────────────────────────────────────
 function afficher() {
-  const liste  = document.getElementById('liste-offres');
-  const vide   = document.getElementById('vide');
+  const liste    = document.getElementById('liste-offres');
+  const vide     = document.getElementById('vide');
   const compteur = document.getElementById('compteur');
 
-  const filtrées = toutesOffres
-    .filter(o => o.score >= scoreMin)
-    .filter(o => !filtreContrat || o.contrat.toLowerCase().includes(filtreContrat.toLowerCase()));
+  let filtrées = toutesOffres.filter(o => o.score >= scoreMin);
+  if (filtreContrat) filtrées = filtrées.filter(o => o.contrat.toLowerCase().includes(filtreContrat.toLowerCase()));
+  if (filtreSource)  filtrées = filtrées.filter(o => o.source === filtreSource);
+  if (filtreTH)      filtrées = filtrées.filter(o => o.th === true);
 
   const nb = filtrées.length;
   compteur.textContent = `${nb} offre${nb > 1 ? 's' : ''} affich\u00e9e${nb > 1 ? 's' : ''}`;
@@ -103,9 +135,10 @@ function afficher() {
   liste.innerHTML = filtrées.map(o => {
     const { cls, texte } = badgeScore(o.score);
     const niveau = niveauScore(o.score);
-    const metaLieu    = o.lieu    ? `<span class="meta-tag">Lieu\u00a0: ${esc(o.lieu)}</span>`    : '';
+    const metaLieu    = o.lieu    ? `<span class="meta-tag">Lieu\u00a0: ${esc(o.lieu)}</span>`       : '';
     const metaContrat = o.contrat ? `<span class="meta-tag">Contrat\u00a0: ${esc(o.contrat)}</span>` : '';
-    const metaDate    = o.date    ? `<span class="meta-tag">Date\u00a0: ${esc(o.date)}</span>`    : '';
+    const metaDate    = o.date    ? `<span class="meta-tag">Date\u00a0: ${esc(o.date)}</span>`       : '';
+    const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th" title="Poste accessible aux travailleurs handicap\u00e9s">\u267F TH</span>` : '';
     return `
       <li role="listitem">
         <a class="carte" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer"
@@ -115,7 +148,7 @@ function afficher() {
             <span class="carte-titre">${esc(o.titre)}</span>
             <span class="badge ${cls}" aria-hidden="true">${texte}</span>
           </div>
-          <div class="carte-meta">${metaLieu}${metaContrat}${metaDate}</div>
+          <div class="carte-meta">${metaLieu}${metaContrat}${metaDate}${metaTH}</div>
           <div class="carte-source">${esc(o.source)}</div>
         </a>
       </li>`;
@@ -138,7 +171,7 @@ async function chargerOffres(forceRefresh = false) {
       const cachedDate = sessionStorage.getItem(CLE_DATE);
       if (cached && cachedDate && Date.now() - Number(cachedDate) < 5 * 60_000) {
         toutesOffres = JSON.parse(cached);
-        majEl.textContent = `Actualisé il y a moins de 5 min`;
+        majEl.textContent = `Actualis\u00e9 il y a moins de 5 min`;
         afficher();
         return;
       }
@@ -147,7 +180,7 @@ async function chargerOffres(forceRefresh = false) {
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000); // 15s max
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
     const res = await fetch('/api/offres', { signal: controller.signal });
     clearTimeout(timeout);
@@ -160,22 +193,22 @@ async function chargerOffres(forceRefresh = false) {
     sessionStorage.setItem(CLE_DATE, String(Date.now()));
 
     const now = new Date();
-    majEl.textContent = `Mis à jour à ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+    majEl.textContent = `Mis \u00e0 jour \u00e0 ${now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
 
     if (data.errors?.length) {
       errDiv.hidden = false;
-      errDiv.textContent = 'Avertissement : ' + data.errors.join(' — ');
+      errDiv.textContent = 'Avertissement\u00a0: ' + data.errors.join(' \u2014 ');
     }
   } catch (err) {
     const cached = sessionStorage.getItem(CLE_CACHE);
     if (cached) {
       try { toutesOffres = JSON.parse(cached); } catch {}
-      majEl.textContent = '(données en cache)';
+      majEl.textContent = '(donn\u00e9es en cache)';
     } else {
       errDiv.hidden = false;
       errDiv.textContent = err.name === 'AbortError'
-        ? 'Délai dépassé — réessayez dans un instant.'
-        : 'Impossible de charger les offres : ' + err.message;
+        ? 'D\u00e9lai d\u00e9pass\u00e9 \u2014 r\u00e9essayez dans un instant.'
+        : 'Impossible de charger les offres\u00a0: ' + err.message;
     }
   } finally {
     afficher();

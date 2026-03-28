@@ -60,7 +60,7 @@ async function getFTToken() {
   return data.access_token;
 }
 
-async function fetchFTAvecParams(token, params, source) {
+async function fetchFTAvecParams(token, params, isTHQuery = false) {
   const res = await fetch(
     `https://api.francetravail.io/partenaire/offresdemploi/v2/offres/search?${params}`,
     { headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' } }
@@ -68,7 +68,7 @@ async function fetchFTAvecParams(token, params, source) {
   if (!res.ok) throw new Error(`FT API ${res.status}`);
   const data = await res.json();
   return (data.resultats || []).map(item => ({
-    source,
+    source:  'France Travail',
     titre:   item.intitule || '',
     lieu:    item.lieuTravail?.libelle || '',
     contrat: item.typeContratLibelle || '',
@@ -77,6 +77,7 @@ async function fetchFTAvecParams(token, params, source) {
              `https://candidat.francetravail.fr/offres/recherche/detail/${item.id}`,
     score:   scoreAsperger(`${item.intitule} ${item.description || ''}`),
     id:      item.id,
+    th:      isTHQuery || item.accessibleTH === true,
   }));
 }
 
@@ -101,15 +102,19 @@ async function fetchFranceTravail() {
   });
 
   const [r1, r2] = await Promise.all([
-    fetchFTAvecParams(token, p1, 'France Travail'),
-    fetchFTAvecParams(token, p2, 'France Travail — Offres TH'),
+    fetchFTAvecParams(token, p1, false),
+    fetchFTAvecParams(token, p2, true),
   ]);
 
-  // Dédoublonnage par id
-  const vus = new Set(r1.map(o => o.id));
-  const r2unique = r2.filter(o => !vus.has(o.id));
+  // Tag r1 offers also present in TH results
+  const thIds = new Set(r2.map(o => o.id));
+  const r1Tagged = r1.map(o => ({ ...o, th: o.th || thIds.has(o.id) }));
 
-  return [...r1, ...r2unique];
+  // Add TH-only offers not in r1
+  const r1Ids = new Set(r1.map(o => o.id));
+  const r2unique = r2.filter(o => !r1Ids.has(o.id));
+
+  return [...r1Tagged, ...r2unique];
 }
 
 
@@ -143,6 +148,7 @@ async function fetchSofty({ nom, url }) {
       lieu:    'Provins',
       contrat: CONTRATS.find(c => texte.includes(c)) || '',
       date:    dateM ? dateM[1] : '',
+      th:      false,
       url:     base + href,
       score:   scoreAsperger(texte),
     });
