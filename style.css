@@ -53,6 +53,9 @@
 /* ── Reset minimal ───────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Garantit que l'attribut hidden l'emporte sur display:flex/grid */
+[hidden] { display: none !important; }
+
 /* ── Base — règles dyslexie ──────────────────────────────────────────────── */
 html {
   font-size: 18px;          /* Grande taille de base */
