@@ -869,7 +869,7 @@ html.profil-daltonien .toggle-track { background: #64748B; }
 html.profil-daltonien input:checked ~ .toggle-track { background: #1E3A5F; }
 
 /* ── Anxiété / stress : tons neutres, aucun rouge/orange agressif ─────────── */
-html.profil-anxiete body { background: #F7F5F2; }
+html.profil-anxiete body { background: #EEEAE4; color: #2C2C2C; }
 
 html.profil-anxiete .badge-haut { background: #334155; color: #fff; border-color: #334155; }
 html.profil-anxiete .badge-mid  { background: #64748B; color: #fff; border-color: #64748B; }
@@ -880,7 +880,7 @@ html.profil-anxiete .badge-non  { background: #E2E8F0; color: #475569; border-co
 html.profil-anxiete .meta-tag--hors-profil { display: none; }
 html.profil-anxiete .meta-tag--profil { background: #F1F5F9; border-color: #94A3B8; color: #475569; }
 
-html.profil-anxiete .carte { box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+html.profil-anxiete .carte { background: #F5F1EB; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
 html.profil-anxiete .carte:hover { box-shadow: 0 2px 8px rgba(0,0,0,.10); transform: none; }
 html.profil-anxiete .etat-erreur { display: none; } /* masque les alertes */
 
