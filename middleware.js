@@ -1,24 +1,12 @@
 export const config = {
-  matcher: ['/((?!api/).*)'],
+  matcher: ['/((?!api|en-construction|_next).*)'],
 }
 
 export default function middleware(request) {
-  const basicAuth = request.headers.get('authorization')
+  const cookie = request.cookies.get('mbj-auth')
+  if (cookie?.value === 'ok') return
 
-  if (basicAuth) {
-    const authValue = basicAuth.split(' ')[1]
-    const decoded = atob(authValue)
-    const pwd = decoded.split(':').slice(1).join(':')
-    if (pwd === 'en construction') {
-      return
-    }
-  }
-
-  return new Response('Accès protégé — MyBestJob', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="MyBestJob", charset="UTF-8"',
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-  })
+  const url = new URL(request.url)
+  url.pathname = '/en-construction.html'
+  return Response.redirect(url.toString(), 302)
 }

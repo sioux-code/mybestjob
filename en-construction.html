@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyBestJob — En construction</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: #1E2430;
+      color: #C8CCDA;
+      font-family: system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .carte {
+      background: #252C3C;
+      border-radius: 14px;
+      padding: 2rem 2rem 1.5rem;
+      width: min(360px, 92vw);
+      box-shadow: 0 4px 30px rgba(0,0,0,.35);
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .logo-ligne {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .logo {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 8px;
+      background: #D4956A;
+      color: #1E2430;
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 { font-size: 1.25rem; font-weight: 600; color: #C8CCDA; }
+    h1 span { color: #5A8ABF; }
+    .soustitre {
+      font-size: .85rem;
+      color: #7A8499;
+      line-height: 1.5;
+    }
+    form { display: flex; flex-direction: column; gap: .75rem; }
+    label { font-size: .75rem; font-weight: 600; color: #7A8499; text-transform: uppercase; letter-spacing: .06em; }
+    input[type="password"] {
+      font-family: inherit;
+      font-size: 1rem;
+      padding: .55rem .8rem;
+      border: 2px solid #2E3448;
+      border-radius: 8px;
+      background: #1E2430;
+      color: #C8CCDA;
+      width: 100%;
+    }
+    input[type="password"]:focus { outline: 3px solid #5A8ABF; border-color: #5A8ABF; }
+    button {
+      background: #5A8ABF;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .6rem 1rem;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: .2rem;
+    }
+    button:hover { background: #3D6A9F; }
+    .erreur {
+      font-size: .82rem;
+      color: #E07070;
+      display: none;
+    }
+    .erreur.visible { display: block; }
+  </style>
+</head>
+<body>
+  <div class="carte">
+    <div class="logo-ligne">
+      <div class="logo">J</div>
+      <h1>My<span>Best</span>Job</h1>
+    </div>
+    <p class="soustitre">Site en construction.<br>Accès réservé.</p>
+    <form method="POST" action="/api/auth">
+      <label for="pwd">Mot de passe</label>
+      <input type="password" id="pwd" name="pwd" autocomplete="current-password" autofocus>
+      <p class="erreur" id="err">Mot de passe incorrect.</p>
+      <button type="submit">Accéder</button>
+    </form>
+  </div>
+  <script>
+    if (new URLSearchParams(location.search).get('erreur')) {
+      document.getElementById('err').classList.add('visible');
+    }
+  </script>
+</body>
+</html>
