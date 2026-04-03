@@ -3,10 +3,14 @@ export const config = {
 }
 
 export default function middleware(request) {
-  const cookie = request.cookies.get('mbj-auth')
-  if (cookie?.value === 'ok') return
+  const cookieHeader = request.headers.get('cookie') || '';
+  const auth = cookieHeader.split(';')
+    .map(c => c.trim().split('='))
+    .find(([k]) => k === 'mbj-auth');
 
-  const url = new URL(request.url)
-  url.pathname = '/en-construction.html'
-  return Response.redirect(url.toString(), 302)
+  if (auth && auth[1] === 'ok') return;
+
+  const url = new URL(request.url);
+  url.pathname = '/en-construction.html';
+  return Response.redirect(url.toString(), 302);
 }
