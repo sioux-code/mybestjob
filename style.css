@@ -684,6 +684,36 @@ select:focus { outline: 3px solid var(--bleu); }
   opacity: .75;
 }
 
+/* ── Ressources utiles ───────────────────────────────────────────────────── */
+.ressources {
+  padding: 1rem 1.25rem .5rem;
+  border-top: 1px solid var(--bordure);
+  margin-top: .5rem;
+}
+
+.ressources-titre {
+  font-size: .70rem;
+  font-weight: 600;
+  color: var(--texte-sec);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: .5rem;
+}
+
+.ressources-liste {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.ressources-liste a {
+  font-size: .82rem;
+  color: var(--bleu);
+  text-decoration: none;
+}
+.ressources-liste a:hover { text-decoration: underline; }
+
 /* ── État vide ───────────────────────────────────────────────────────────── */
 .etat-vide {
   display: flex;
