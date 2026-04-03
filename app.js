@@ -4,11 +4,41 @@
 const CLE_CACHE   = 'mybestjob-offres-v3';
 const CLE_DATE    = 'mybestjob-date';
 const CLE_PROFIL  = 'mybestjob-profil';
+const CLE_FAVORIS = 'mybestjob-favoris';
 
 let toutesOffres   = [];
 let filtreContrat  = '';
 let filtreTH       = false;
 let filtreProfil   = false;
+let filtreFavoris  = false;
+
+// ── Favoris ───────────────────────────────────────────────────────────────────
+let favoris = new Set();
+
+function chargerFavoris() {
+  try {
+    const s = localStorage.getItem(CLE_FAVORIS);
+    if (s) favoris = new Set(JSON.parse(s));
+  } catch {}
+}
+
+function sauverFavoris() {
+  localStorage.setItem(CLE_FAVORIS, JSON.stringify([...favoris]));
+}
+
+function toggleFavori(url) {
+  if (favoris.has(url)) favoris.delete(url);
+  else favoris.add(url);
+  sauverFavoris();
+  // Mettre à jour tous les boutons de cet url sans re-render
+  document.querySelectorAll(`.btn-favori[data-url="${CSS.escape(url)}"]`).forEach(btn => {
+    const actif = favoris.has(url);
+    btn.classList.toggle('btn-favori--actif', actif);
+    btn.setAttribute('aria-label', actif ? 'Retirer des favoris' : 'Ajouter aux favoris');
+    btn.textContent = actif ? '♥' : '♡';
+  });
+  if (filtreFavoris) afficher();
+}
 let userLat        = null;
 let userLng        = null;
 let filtreDistance = 50;
@@ -112,6 +142,11 @@ document.getElementById('install-btn').addEventListener('click', async () => {
 });
 
 document.getElementById('filtre-contrat').addEventListener('change', e => { filtreContrat = e.target.value; afficher(); });
+document.getElementById('filtre-favoris').addEventListener('change', e => {
+  filtreFavoris = e.target.checked;
+  e.target.setAttribute('aria-checked', String(e.target.checked));
+  afficher();
+});
 document.getElementById('filtre-profil').addEventListener('change', e => {
   filtreProfil = e.target.checked;
   e.target.setAttribute('aria-checked', String(e.target.checked));
@@ -168,12 +203,13 @@ document.getElementById('btn-reset-filtres').addEventListener('click', () => {
   document.getElementById('filtre-contrat').value = '';
 
   // Toggles → off
-  filtreTH = false;
-  filtreProfil = false;
+  filtreTH = false; filtreProfil = false; filtreFavoris = false;
   const th = document.getElementById('filtre-th');
   th.checked = false; th.setAttribute('aria-checked', 'false');
   const prof = document.getElementById('filtre-profil');
   prof.checked = false; prof.setAttribute('aria-checked', 'false');
+  const fav = document.getElementById('filtre-favoris');
+  fav.checked = false; fav.setAttribute('aria-checked', 'false');
 
   afficher();
 });
@@ -288,6 +324,7 @@ function afficher() {
   if (filtreContrat) filtrées = filtrées.filter(({ o }) => o.contrat === filtreContrat);
   if (filtreTH)      filtrées = filtrées.filter(({ o }) => o.th === true);
   if (filtreProfil)  filtrées = filtrées.filter(({ sp }) => sp >= 7);
+  if (filtreFavoris) filtrées = filtrées.filter(({ o }) => favoris.has(o.url));
   if (userLat !== null) {
     filtrées = filtrées.filter(({ o }) => {
       if (o.lat == null || o.lng == null) return true;
@@ -321,8 +358,9 @@ function afficher() {
     const metaDate    = o.date    ? `<span class="meta-tag">${esc(o.date)}</span>` : '';
     const metaTH      = o.th      ? `<span class="meta-tag meta-tag--th" title="Cet employeur a déclaré être ouvert aux travailleurs handicapés">Ouvert RQTH</span>` : '';
 
+    const estFavori = favoris.has(o.url);
     return `
-      <li role="listitem">
+      <li role="listitem" class="carte-li">
         <a class="carte" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer"
            data-niveau="${niveau}" aria-label="${esc(o.titre)} \u2014 ${texte}">
           <div class="carte-entete">
@@ -332,6 +370,11 @@ function afficher() {
           <div class="carte-meta">${metaProfil}${metaDist}${metaLieu}${metaContrat}${metaDate}${metaTH}</div>
           <div class="carte-source">${esc(o.source)}</div>
         </a>
+        <button class="btn-favori${estFavori ? ' btn-favori--actif' : ''}"
+                data-url="${esc(o.url)}"
+                aria-label="${estFavori ? 'Retirer des favoris' : 'Ajouter aux favoris'}"
+                title="${estFavori ? 'Retirer des favoris' : 'Sauvegarder'}"
+                onclick="event.stopPropagation(); toggleFavori('${esc(o.url)}')">${estFavori ? '\u2665' : '\u2661'}</button>
       </li>`;
   }).join('');
 }
@@ -397,4 +440,5 @@ async function chargerOffres(forceRefresh = false) {
 
 // ── Lancement ──────────────────────────────────────────────────────────────────
 chargerProfil();
+chargerFavoris();
 chargerOffres();

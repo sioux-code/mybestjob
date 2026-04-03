@@ -533,6 +533,29 @@ select:focus { outline: 3px solid var(--bleu); }
   width: 100%;
 }
 
+/* ── Carte + favori ──────────────────────────────────────────────────────── */
+.carte-li {
+  position: relative;
+}
+
+.btn-favori {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--texte-sec);
+  cursor: pointer;
+  padding: .2rem .3rem;
+  border-radius: 4px;
+  transition: color .12s;
+  z-index: 1;
+}
+.btn-favori:hover       { color: #E07070; }
+.btn-favori--actif      { color: #E07070; }
+
 /* ── Carte ───────────────────────────────────────────────────────────────── */
 .carte {
   display: block;
