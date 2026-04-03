@@ -730,12 +730,44 @@ select:focus { outline: 3px solid var(--bleu); }
   gap: .35rem;
 }
 
-.ressources-liste a {
+.ressources-liste a, .ressources-intro a {
   font-size: .82rem;
   color: var(--bleu);
   text-decoration: none;
 }
-.ressources-liste a:hover { text-decoration: underline; }
+.ressources-liste a:hover, .ressources-intro a:hover { text-decoration: underline; }
+
+.ressources-intro {
+  font-size: .82rem;
+  color: var(--texte-sec);
+  margin-bottom: .6rem;
+}
+
+.formations-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .82rem;
+}
+.formations-table th {
+  text-align: left;
+  font-size: .70rem;
+  font-weight: 600;
+  color: var(--texte-sec);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: .3rem .5rem;
+  border-bottom: 1px solid var(--bordure);
+}
+.formations-table td {
+  padding: .45rem .5rem;
+  border-bottom: 1px solid var(--bordure);
+  vertical-align: top;
+  color: var(--texte);
+}
+.formations-table td:last-child { color: var(--texte-sec); }
+.formations-table a { color: var(--bleu); text-decoration: none; }
+.formations-table a:hover { text-decoration: underline; }
+.formations-table tr:last-child td { border-bottom: none; }
 
 /* ── État vide ───────────────────────────────────────────────────────────── */
 .etat-vide {
